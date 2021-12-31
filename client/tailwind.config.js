@@ -26,7 +26,7 @@ module.exports = {
         // bgblack: "#010001",
         bgblack: "#0D1117",
         bgBlackSec: "#141921",
-        bgWhiteSec: "#F6F8FA",
+        bgWhiteSec: "#f0f1f2",
         bgyellow: "#FCDC60",
         // bgyellow: "#FFD237",
       },
