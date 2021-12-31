@@ -5,6 +5,7 @@ module.exports = {
     "./components/**/*.{js,ts,jsx,tsx}",
   ],
   darkMode: "class",
+
   theme: {
     screens: {
       "mobile-s": "320px",
@@ -22,8 +23,12 @@ module.exports = {
     },
     extend: {
       colors: {
-        bgblack: "#010001",
-        bgyellow: "#FFD237",
+        // bgblack: "#010001",
+        bgblack: "#0D1117",
+        bgBlackSec: "#141921",
+        bgWhiteSec: "#F6F8FA",
+        bgyellow: "#FCDC60",
+        // bgyellow: "#FFD237",
       },
     },
   },

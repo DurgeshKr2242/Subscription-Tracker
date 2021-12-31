@@ -12,6 +12,12 @@
   .sidebarTooltip {
     @apply absolute w-auto px-2 py-2 text-sm font-bold transition-all duration-200 ease-linear scale-0 rounded-lg shadow-md tablet-s:left-16 tablet-s:bottom-1 bottom-16 min-w-max bg-bgyellow text-bgblack;
   }
+  .inputBox {
+    @apply text-sm text-gray-900 placeholder-transparent border-b-2 border-b-gray-400 focus:outline-none focus:border-b-yellow-400;
+  }
+  .inputLabel {
+    @apply absolute left-0 text-sm text-gray-400 transition-all cursor-text -top-5 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-0 peer-focus:-top-5 peer-focus:text-gray-600 peer-focus:text-sm;
+  }
 }
 
 html,
@@ -33,4 +39,5 @@ a {
 
 * {
   box-sizing: border-box;
+  /* background-color: rgba(8, 8, 8, 0.486); */
 }

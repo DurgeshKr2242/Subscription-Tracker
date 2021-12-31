@@ -15,34 +15,32 @@ const TopInfo = () => {
         <div className="flex flex-col gap-4 font-bold tablet-s:flex tablet-s:flex-row ">
           <h2 className="text-lg">Sort : </h2>
           <div className="flex gap-2 text-md">
-            <AnimatePresence>
-              <motion.button
-                whileHover={{ scale: 1.1 }}
-                //   initial={{ x: "50%", scale: 0 }}
-                //   animate={{ x: 0, scale: 1 }}
-                //   transition={{ duration: 0.5, ease: "easeInOut" }}
-                whileTap={{ scale: 0.9 }}
-                className={`${
-                  durationActive && "bg-bgyellow text-bgblack"
-                } px-2 rounded-xl font-semibold tracking-wide`}
-                onClick={() => setDurationActive(true)}
-              >
-                Duration
-              </motion.button>
-              <motion.button
-                whileHover={{ scale: 1.1 }}
-                //   initial={{ x: "50%", scale: 0 }}
-                //   transition={{ duration: 0.5, ease: "easeInOut" }}
-                //   animate={{ x: 0, scale: 1 }}
-                whileTap={{ scale: 0.9 }}
-                className={`${
-                  !durationActive && "bg-bgyellow text-bgblack"
-                } px-2 rounded-xl font-semibold tracking-wide`}
-                onClick={() => setDurationActive(false)}
-              >
-                Time Remaining
-              </motion.button>
-            </AnimatePresence>
+            <motion.button
+              whileHover={{ scale: 1.1 }}
+              //   initial={{ x: "50%", scale: 0 }}
+              //   animate={{ x: 0, scale: 1 }}
+              //   transition={{ duration: 0.5, ease: "easeInOut" }}
+              whileTap={{ scale: 0.9 }}
+              className={`${
+                durationActive && "bg-bgyellow text-bgblack"
+              } px-2 rounded-xl font-semibold tracking-wide`}
+              onClick={() => setDurationActive(true)}
+            >
+              Duration
+            </motion.button>
+            <motion.button
+              whileHover={{ scale: 1.1 }}
+              //   initial={{ x: "50%", scale: 0 }}
+              //   transition={{ duration: 0.5, ease: "easeInOut" }}
+              //   animate={{ x: 0, scale: 1 }}
+              whileTap={{ scale: 0.9 }}
+              className={`${
+                !durationActive && "bg-bgyellow text-bgblack"
+              } px-2 rounded-xl font-semibold tracking-wide`}
+              onClick={() => setDurationActive(false)}
+            >
+              Time Remaining
+            </motion.button>
           </div>
         </div>
       </div>

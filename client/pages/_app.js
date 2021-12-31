@@ -13,14 +13,17 @@ function MyApp({ Component, pageProps }) {
   // }, []);
   // const isDark = localStorage.getItem("dark-theme");
   return (
-    <div id="appId" className={`flex flex-row dark ${enabled && "dark"}`}>
-      <p className="absolute z-10 text-lg font-bold underline uppercase dark:text-bgyellow top-5 left-3 decoration-black dark:decoration-bgyellow decoration-4 underline-offset-8">
-        SUBS
-      </p>
-      <DarkModeSwitch />
-      <Navbar />
-      <Component {...pageProps} />
-    </div>
+    <>
+      {/* <div id="appId" className={`flex flex-row dark ${enabled && "dark"}`}> */}
+      <div id="appId" className="flex flex-row">
+        <p className="absolute z-10 text-lg font-bold underline uppercase dark:text-bgyellow top-5 left-3 decoration-black dark:decoration-bgyellow decoration-4 underline-offset-8">
+          SUBS
+        </p>
+        <DarkModeSwitch />
+        <Navbar />
+        <Component {...pageProps} />
+      </div>
+    </>
   );
 }
 
