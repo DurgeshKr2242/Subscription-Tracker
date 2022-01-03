@@ -1,60 +1,27 @@
-import React from "react";
-import { FcGoogle } from "react-icons/fc";
+import React, { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { ImArrowRight2 } from "react-icons/im";
 
+import LoginForm from "../../components/Auth/LoginForm";
+import RegisterForm from "../../components/Auth/RegisterForm";
 const Login = () => {
-  const loginSubmitHandler = (e) => {
-    e.preventDefault();
-    console.log("logedIN");
-  };
+  const [loginActive, setLoginActive] = useState(true);
 
   return (
-    <div className="flex items-center justify-center w-screen h-screen bg-white dark:bg-bgblack dark:text-white ">
-      <div className="flex flex-col items-center px-6 pt-4 pb-8 rounded-lg dark:bg-bgBlackSec bg-bgWhiteSec shadow-md dark:shadow-black shadow-gray-400  min-w-[280px]">
-        <p className="mb-8 text-2xl font-extrabold tracking-wide underline dark:text-white text-bgblack decoration-bgyellow underline-offset-2 decoration-4">
-          LOGIN
-        </p>
-        <button className="rounded-full">
-          <FcGoogle className="text-3xl" />
-        </button>
-        <div className="relative flex items-center w-full gap-3 mt-8">
-          <div className="inline-block w-full h-1 bg-gray-200 dark:bg-bgblack"></div>
-          <p>OR</p>
-          <div className="inline-block w-full h-1 bg-gray-200 dark:bg-bgblack"></div>
-        </div>
-        <form
-          className="flex flex-col items-center w-full"
-          onSubmit={loginSubmitHandler}
-        >
-          <div className="relative w-full mt-8">
-            <input
-              placeholder="Enter your email address"
-              className="inputBox peer dark:text-gray-100"
-              id="email"
-              type="email"
-            />
-            <label className="inputLabel" htmlFor="email">
-              Email Id
-            </label>
-          </div>
-          <div className="relative w-full mt-8">
-            <input
-              placeholder="Enter your email address"
-              className="inputBox peer dark:text-gray-100"
-              id="password"
-              type="password"
-            />
-            <label className="inputLabel" htmlFor="password">
-              Password
-            </label>
-          </div>
-          <button
-            type="submit"
-            className="px-4 py-2 mt-8 text-sm font-extrabold tracking-wide uppercase rounded-md shadow-md bg-bgyellow shadow-yellow-900 text-bgblack"
-          >
-            Login
-          </button>
-        </form>
-      </div>
+    <div className="flex flex-col items-center justify-center w-screen h-screen gap-2 bg-white dark:bg-bgblack dark:text-white ">
+      <motion.button
+        animate={{ scale: 1 }}
+        initial={{ scale: 0 }}
+        exit={{ scale: 0 }}
+        className="flex flex-row items-center justify-center gap-4 px-4 py-2 text-sm font-extrabold tracking-wide uppercase rounded-md shadow-sm bg-bgyellow shadow-yellow-900 text-bgblack"
+        onClick={() => setLoginActive(!loginActive)}
+      >
+        {loginActive ? "Create a new account" : "Switch to login"}
+        <ImArrowRight2 />
+      </motion.button>
+      <AnimatePresence>
+        {loginActive ? <LoginForm /> : <RegisterForm />}
+      </AnimatePresence>
     </div>
   );
 };
