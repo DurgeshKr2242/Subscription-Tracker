@@ -9,12 +9,17 @@
   },
   "dependencies": {
     "axios": "^0.24.0",
+    "firebase": "^9.6.1",
     "framer-motion": "^5.5.5",
     "next": "12.0.7",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-icons": "^4.3.1",
-    "react-responsive-modal": "^6.2.0"
+    "react-redux": "^7.2.6",
+    "react-responsive-modal": "^6.2.0",
+    "react-toastify": "^8.1.0",
+    "redux": "^4.1.2",
+    "redux-devtools-extension": "^2.13.9"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.0",
