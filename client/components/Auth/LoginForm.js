@@ -2,19 +2,22 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { FcGoogle } from "react-icons/fc";
 import { motion } from "framer-motion";
-import { signInWithEmailAndPassword } from "firebase/auth";
 import { toast } from "react-toastify";
-
+import { signInWithPopup } from "firebase/auth";
+// import { googleAuthProvider } from "../../firebase";
+import { googleAuthProvider } from "../../firebase";
 import { auth } from "../../firebase";
 import { useGlobalAuthContext } from "../../AuthContext";
-
+import { signInWithEmailAndPassword } from "firebase/auth";
 const LoginForm = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  // const [email, setEmail] = useState("youngporkey2242@gmail.com");
+  const [loginEmail, setLoginEmail] = useState("youngporkey2242@gmail.com");
+  const [password, setPassword] = useState("qwertyuiop");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  const { token } = useGlobalAuthContext();
+  // const { token, setUser, setEmail, setToken } = useGlobalAuthContext();
+  const { token, setEmail, setUser, setToken } = useGlobalAuthContext();
 
   useEffect(() => {
     if (token) router.push("/");
@@ -22,15 +25,23 @@ const LoginForm = () => {
 
   const loginSubmitHandler = async (e) => {
     e.preventDefault();
-    setLoading(true);
     try {
-      const result = await signInWithEmailAndPassword(auth, email, password);
-      console.log(result);
-      const { user } = result;
+      console.log("LOGGING IN!!!");
+      console.log(auth);
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        loginEmail,
+        password
+      );
+      console.log("LOGed IN!!!");
+      const user = userCredential.user;
       const idTokenResult = await user.getIdTokenResult();
-      console.log(user);
-      console.log("TOKEN", idTokenResult.token);
-      toast.successc("LOGGED IN", {
+      setUser(user);
+      setToken(idTokenResult.token);
+      setEmail(user.email);
+      // console.log("TOKEN", idTokenResult.token);
+
+      toast.success("LOGGED IN", {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
@@ -39,6 +50,33 @@ const LoginForm = () => {
         draggable: true,
         progress: undefined,
       });
+    } catch (err) {
+      console.log(err);
+      toast.error(err.message, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    }
+  };
+
+  const googleLoginHandler = async (e) => {
+    e.preventDefault();
+    try {
+      const googleResult = await signInWithPopup(auth, googleAuthProvider);
+      const { user } = googleResult;
+      const idTokenResult = await user.getIdTokenResult();
+
+      setToken(idTokenResult.token);
+      console.log(idTokenResult.token);
+      setUser(user);
+      setEmail(user.email);
+      console.log(user);
+
       // createOrUpdateUser(idTokenResult.token)
       //   .then((res) => {
       //     dispatch({
@@ -55,9 +93,7 @@ const LoginForm = () => {
       //   .catch((err) => {
       //     console.log("ERR IN CLIENT LOGIN SUBMIT HANDLER", err);
       //   });
-      setLoading(false);
-
-      router.push("/");
+      // router.push("/");
     } catch (error) {
       setLoading(false);
       console.log(error);
@@ -83,7 +119,7 @@ const LoginForm = () => {
       <p className="mb-8 text-2xl font-extrabold tracking-wide underline dark:text-white text-bgblack decoration-bgyellow underline-offset-2 decoration-4">
         LOGIN
       </p>
-      <button className="rounded-full">
+      <button onClick={googleLoginHandler} className="rounded-full">
         <FcGoogle className="text-3xl" />
       </button>
       <div className="relative flex items-center w-full gap-3 mt-8">
@@ -101,8 +137,8 @@ const LoginForm = () => {
             className="inputBox peer dark:text-gray-100"
             id="email"
             type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            value={loginEmail}
+            onChange={(e) => setLoginEmail(e.target.value)}
           />
           <label className="inputLabel" htmlFor="email">
             Email Id

@@ -5,34 +5,50 @@ import { toast } from "react-toastify";
 import { sendSignInLinkToEmail } from "firebase/auth";
 // import { useSelector } from "react-redux";
 // import { useNavigate } from "react-router-dom";
-
+import { createUserWithEmailAndPassword } from "firebase/auth";
 const RegisterForm = () => {
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   // const navigate = useNavigate();
 
   const registerSubmitHandler = async (e) => {
     e.preventDefault();
-    const config = {
-      url: "http://localhost:3000/auth/complete",
-      handleCodeInApp: true,
-    };
+    // const config = {
+    //   url: "http://localhost:3000/auth/complete",
+    //   handleCodeInApp: true,
+    // };
 
-    await sendSignInLinkToEmail(auth, email, config);
+    // await sendSignInLinkToEmail(auth, email, config);
 
-    toast.success(
-      `Email successfully sent to ${email}. Click the link to complete the registration`,
-      {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      }
-    );
-    window.localStorage.setItem("emailForRegistrationSubTrack", email);
-    setEmail("");
+    // toast.success(
+    //   `Email successfully sent to ${email}. Click the link to complete the registration`,
+    //   {
+    //     position: "top-right",
+    //     autoClose: 5000,
+    //     hideProgressBar: false,
+    //     closeOnClick: true,
+    //     pauseOnHover: true,
+    //     draggable: true,
+    //     progress: undefined,
+    //   }
+    // );
+    // window.localStorage.setItem("emailForRegistrationSubTrack", email);
+    // setEmail("");
+
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        // Signed in
+        const user = userCredential.user;
+        console.log(user);
+        console.log("created User");
+        // ...
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        // ..
+        console.log(error);
+      });
   };
 
   return (
@@ -63,17 +79,19 @@ const RegisterForm = () => {
             Email Id
           </label>
         </div>
-        {/* <div className="relative w-full mt-8">
+        <div className="relative w-full mt-8">
           <input
             placeholder="Enter your email address"
             className="inputBox peer dark:text-gray-100"
             id="password"
             type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
           />
           <label className="inputLabel" htmlFor="password">
             Password
           </label>
-        </div> */}
+        </div>
         <button
           type="submit"
           className="px-4 py-2 mt-8 text-sm font-extrabold tracking-wide uppercase rounded-md shadow-md bg-bgyellow shadow-yellow-900 text-bgblack"

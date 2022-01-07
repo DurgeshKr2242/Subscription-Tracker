@@ -22,7 +22,7 @@ const RegisterComplete = () => {
 
   const registerSubmitHandler = async (e) => {
     e.preventDefault();
-    console.log(email, password);
+    // console.log(email, password);
     if (!email || !password) {
       toast.warn("Please provide your email and password for confirmation", {
         position: "top-right",
@@ -44,7 +44,9 @@ const RegisterComplete = () => {
       if (result.user.emailVerified) {
         window.localStorage.removeItem("emailForRegistrationSubTrack");
         let user = auth.currentUser;
-        await updateProfile(user, { password: password });
+        const updateUser = await updateProfile(user, { password: password });
+        // console.log(updateUser);
+        console.log(user);
         const idTokenResult = await user.getIdTokenResult();
         console.log(idTokenResult.token);
         // createOrUpdateUser(idTokenResult.token)

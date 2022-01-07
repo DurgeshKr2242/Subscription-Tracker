@@ -14,10 +14,11 @@ import { auth } from "../../firebase";
 
 const Navbar = () => {
   const router = useRouter();
-  const { email, setEmail, setToken } = useGlobalAuthContext();
+  const { email, setEmail, setToken, token } = useGlobalAuthContext();
 
-  const logoutHandler = async () => {
+  const logoutHandler = async (e) => {
     // console.log(loggingOUT);
+    e.preventDefault();
     try {
       await signOut(auth);
       setEmail(null);
@@ -49,16 +50,18 @@ const Navbar = () => {
           <SideBarIcon
             text="People"
             icon={<GoPerson />}
-            onClick={() => console.log(email)}
+            onClick={() => console.log(email, token)}
           />
         </li>
-        <li>
-          <SideBarIcon
-            text="Authenticate"
-            icon={<BsFillUnlockFill />}
-            onClick={() => router.push("/auth/login")}
-          />
-        </li>
+        {!token && (
+          <li>
+            <SideBarIcon
+              text="Authenticate"
+              icon={<BsFillUnlockFill />}
+              onClick={() => router.push("/auth/login")}
+            />
+          </li>
+        )}
         <li>
           <SideBarIcon
             text="Logout"

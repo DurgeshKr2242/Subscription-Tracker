@@ -6,9 +6,9 @@ const AuthProvider = ({ children }) => {
   //   const [username, setUsername] = useState("");
   //   const [email, setEmail] = useState("");
   //   const [password, setPassword] = useState("");
-  //   const [user, setUser] = useState(null);
+  // const [user, setUser] = useState(null);
 
-  //   const [user, setUser] = useState(null);
+  const [user, setUser] = useState(null);
   const [email, setEmail] = useState(null);
   const [token, setToken] = useState(null);
 
@@ -18,6 +18,7 @@ const AuthProvider = ({ children }) => {
         const idTokenResult = await user.getIdTokenResult();
         setEmail(user.email);
         setToken(idTokenResult.token);
+        setUser(user);
       }
     });
 
@@ -31,6 +32,8 @@ const AuthProvider = ({ children }) => {
         setToken,
         email,
         setEmail,
+        user,
+        setUser,
       }}
     >
       {children}
