@@ -17,7 +17,6 @@ const Navbar = () => {
   const { email, setEmail, setToken, token } = useGlobalAuthContext();
 
   const logoutHandler = async (e) => {
-    // console.log(loggingOUT);
     e.preventDefault();
     try {
       await signOut(auth);

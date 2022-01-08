@@ -2,53 +2,90 @@ import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { auth } from "../../firebase";
 import { toast } from "react-toastify";
-import { sendSignInLinkToEmail } from "firebase/auth";
-// import { useSelector } from "react-redux";
-// import { useNavigate } from "react-router-dom";
 import { createUserWithEmailAndPassword } from "firebase/auth";
+import { useGlobalAuthContext } from "../../AuthContext";
+import { useRouter } from "next/router";
 const RegisterForm = () => {
-  const [email, setEmail] = useState("");
+  const [registrationEmail, setRegistrationEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const router = useRouter();
+
+  const {
+    token,
+    setToken,
+    email,
+    setEmail,
+    user,
+    setUser,
+    userId,
+    setUserId,
+    username,
+    setUsername,
+    profilePic,
+    setProfilePic,
+  } = useGlobalAuthContext();
   // const navigate = useNavigate();
 
   const registerSubmitHandler = async (e) => {
     e.preventDefault();
-    // const config = {
-    //   url: "http://localhost:3000/auth/complete",
-    //   handleCodeInApp: true,
-    // };
 
-    // await sendSignInLinkToEmail(auth, email, config);
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        registrationEmail,
+        password
+      );
+      // Signed in
+      const user = userCredential.user;
+      const idTokenResult = await user.getIdTokenResult();
 
-    // toast.success(
-    //   `Email successfully sent to ${email}. Click the link to complete the registration`,
-    //   {
-    //     position: "top-right",
-    //     autoClose: 5000,
-    //     hideProgressBar: false,
-    //     closeOnClick: true,
-    //     pauseOnHover: true,
-    //     draggable: true,
-    //     progress: undefined,
-    //   }
-    // );
-    // window.localStorage.setItem("emailForRegistrationSubTrack", email);
-    // setEmail("");
+      try {
+        const res = await createOrUpdateUser(idTokenResult.token);
+        setToken(idTokenResult.token);
+        setUser(user);
+        setProfilePic(res.data.picture);
+        setUsername(res.data.name);
+        setEmail(res.data.email);
+        setUserId(res.data._id);
+        // console.log(idTokenResult.token);
+        // console.log(user);
 
-    createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        // Signed in
-        const user = userCredential.user;
-        console.log(user);
-        console.log("created User");
-        // ...
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        // ..
-        console.log(error);
+        console.log("created user", res);
+        toast.success("LOGGED IN", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+        router.push("/all-subscriptions");
+      } catch (err) {
+        console.log(err);
+        toast.error(err.message, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      }
+    } catch (err) {
+      console.log(err);
+      toast.error(err.message, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
       });
+    }
   };
 
   return (
@@ -72,8 +109,8 @@ const RegisterForm = () => {
             className="inputBox peer dark:text-gray-100"
             id="email"
             type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            value={registrationEmail}
+            onChange={(e) => setRegistrationEmail(e.target.value)}
           />
           <label className="inputLabel" htmlFor="email">
             Email Id
@@ -81,7 +118,7 @@ const RegisterForm = () => {
         </div>
         <div className="relative w-full mt-8">
           <input
-            placeholder="Enter your email address"
+            placeholder="Enter your password"
             className="inputBox peer dark:text-gray-100"
             id="password"
             type="password"

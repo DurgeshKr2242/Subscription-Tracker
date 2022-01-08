@@ -2,14 +2,16 @@ const express = require("express");
 
 const router = express.Router();
 
-// * MIDDLEWARES
+//  MIDDLEWARES
 
 const { authCheck } = require("../middlewares/authMiddleware");
 
-// * CONTROLLERS
+// Create or update User
+const {
+  createorupdateuser,
+  currentUser,
+} = require("../controllers/authController");
 
-const { createorupdateuser } = require("../controllers/authControllers");
-
-router.post("/create-or-update-user", authCheck, createorupdateuser);
-
+router.post("/", authCheck, createorupdateuser);
+router.post("/current-user", authCheck, currentUser);
 module.exports = router;

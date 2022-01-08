@@ -4,16 +4,13 @@ const { ObjectId } = mongoose.Schema;
 const userSchema = new mongoose.Schema(
   {
     name: String,
+    picture: String,
     email: {
       type: String,
       required: true,
       index: true,
     },
-    role: {
-      type: String,
-      default: "subscriber",
-    },
-    cart: {
+    friends: {
       type: Array,
       default: [],
     },

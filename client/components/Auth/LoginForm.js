@@ -9,15 +9,28 @@ import { googleAuthProvider } from "../../firebase";
 import { auth } from "../../firebase";
 import { useGlobalAuthContext } from "../../AuthContext";
 import { signInWithEmailAndPassword } from "firebase/auth";
+import { createOrUpdateUser } from "../../functions/auth";
+// import axios from "axios";
+
 const LoginForm = () => {
-  // const [email, setEmail] = useState("youngporkey2242@gmail.com");
   const [loginEmail, setLoginEmail] = useState("youngporkey2242@gmail.com");
   const [password, setPassword] = useState("qwertyuiop");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-
-  // const { token, setUser, setEmail, setToken } = useGlobalAuthContext();
-  const { token, setEmail, setUser, setToken } = useGlobalAuthContext();
+  const {
+    token,
+    setToken,
+    email,
+    setEmail,
+    user,
+    setUser,
+    userId,
+    setUserId,
+    username,
+    setUsername,
+    profilePic,
+    setProfilePic,
+  } = useGlobalAuthContext();
 
   useEffect(() => {
     if (token) router.push("/");
@@ -36,20 +49,36 @@ const LoginForm = () => {
       console.log("LOGed IN!!!");
       const user = userCredential.user;
       const idTokenResult = await user.getIdTokenResult();
-      setUser(user);
-      setToken(idTokenResult.token);
-      setEmail(user.email);
-      // console.log("TOKEN", idTokenResult.token);
+      try {
+        const res = await createOrUpdateUser(idTokenResult.token);
+        console.log(res);
+        if (res?.data) {
+          setToken(idTokenResult.token);
+          setUser(user);
+          setProfilePic(res.data.picture);
+          setUsername(res.data.name);
+          setEmail(res.data.email);
+          setUserId(res.data._id);
 
-      toast.success("LOGGED IN", {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
+          console.log("VALUES UPDATED YO!!");
+          toast.success("LOGGED IN", {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          });
+          router.push("/all-subscriptions");
+        }
+        // console.log(idTokenResult.token);
+        // console.log(user);
+
+        console.log("create or update response", res);
+      } catch (err) {
+        console.log(err);
+      }
     } catch (err) {
       console.log(err);
       toast.error(err.message, {
@@ -71,29 +100,26 @@ const LoginForm = () => {
       const { user } = googleResult;
       const idTokenResult = await user.getIdTokenResult();
 
-      setToken(idTokenResult.token);
-      console.log(idTokenResult.token);
-      setUser(user);
-      setEmail(user.email);
-      console.log(user);
+      try {
+        const res = await createOrUpdateUser(idTokenResult.token);
+        console.log(res);
+        if (res?.data) {
+          setToken(idTokenResult.token);
+          setUser(user);
+          setProfilePic(res.data.picture);
+          setUsername(res.data.name);
+          setEmail(res.data.email);
+          setUserId(res.data._id);
 
-      // createOrUpdateUser(idTokenResult.token)
-      //   .then((res) => {
-      //     dispatch({
-      //       type: "LOGGED_IN_USER",
-      //       payload: {
-      //         name: res.data.name,
-      //         email: res.data.email,
-      //         token: idTokenResult.token,
-      //         role: res.data.role,
-      //         _id: res.data._id,
-      //       },
-      //     });
-      //   })
-      //   .catch((err) => {
-      //     console.log("ERR IN CLIENT LOGIN SUBMIT HANDLER", err);
-      //   });
-      // router.push("/");
+          console.log("VALUES UPDATED YO!!");
+        }
+
+        console.log("create or update response", res);
+
+        router.push("/all-subscriptions");
+      } catch (err) {
+        console.log(err);
+      }
     } catch (error) {
       setLoading(false);
       console.log(error);

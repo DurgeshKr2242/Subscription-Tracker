@@ -8,6 +8,8 @@ require("dotenv").config();
 
 const app = express();
 
+// Middlewares
+
 app.use(morgan("dev"));
 app.use(bodyParser.json({ limit: "2mb" }));
 app.use(cors());
@@ -18,9 +20,12 @@ mongoose
   )
   .then(() => {
     console.log("DB CONNECTED!");
-    const port = process.env.PORT || 8000;
-    app.listen(port, () => console.log(`SERVER RUNNING ON ${port}`));
   })
   .catch((e) => {
     console.log("Error while connecting DB or LISTENING ON PORT", e);
   });
+
+readdirSync("./routes").map((r) => app.use("/api", require("./routes/" + r)));
+
+const port = process.env.PORT || 8000;
+app.listen(port, () => console.log(`Server is running on port ${port}`));

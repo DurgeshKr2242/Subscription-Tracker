@@ -1,5 +1,7 @@
 import React, { useState, useContext, useEffect } from "react";
 import { auth } from "./firebase";
+import { currentUser } from "./functions/auth";
+
 const AuthContext = React.createContext();
 
 const AuthProvider = ({ children }) => {
@@ -10,15 +12,31 @@ const AuthProvider = ({ children }) => {
 
   const [user, setUser] = useState(null);
   const [email, setEmail] = useState(null);
+  const [userId, setUserId] = useState(null);
+  const [username, setUsername] = useState(null);
+  const [profilePic, setProfilePic] = useState(null);
   const [token, setToken] = useState(null);
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
       if (user) {
         const idTokenResult = await user.getIdTokenResult();
-        setEmail(user.email);
-        setToken(idTokenResult.token);
-        setUser(user);
+
+        try {
+          const res = await currentUser(idTokenResult.token);
+          setToken(idTokenResult.token);
+          setUser(user);
+          setProfilePic(res.data.picture);
+          setUsername(res.data.name);
+          setEmail(res.data.email);
+          setUserId(res.data._id);
+          // console.log(idTokenResult.token);
+          // console.log(user);
+
+          // console.log("Current user", res);
+        } catch (err) {
+          console.log(err);
+        }
       }
     });
 
@@ -34,6 +52,12 @@ const AuthProvider = ({ children }) => {
         setEmail,
         user,
         setUser,
+        userId,
+        setUserId,
+        username,
+        setUsername,
+        profilePic,
+        setProfilePic,
       }}
     >
       {children}

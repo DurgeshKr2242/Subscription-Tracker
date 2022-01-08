@@ -19,12 +19,6 @@ const SingleSubscription = () => {
 
   return (
     <div className="relative flex flex-col gap-0 mb-12 text-sm">
-      {/* <div className="w-full h-1 mb-2 bg-gray-200 ">
-        <div
-          className="h-1 bg-green-500 rounded-full"
-          style={{ width: "55%" }}
-        ></div>
-      </div> */}
       <div className="relative flex flex-col items-center gap-4 tracking-wide tablet-s:flex-col">
         <img
           className="rounded-full shadow-md max-w-18 max-h-18 dark:shadow-black shadow-gray-400"
@@ -38,9 +32,6 @@ const SingleSubscription = () => {
           <p className="absolute right-0 py-1 pl-2 pr-1 font-bold text-bgblack bg-bgyellow rounded-tl-md">
             $999
           </p>
-          {/* <p className="mt-2 text-center">
-            <span className="font-bold uppercase">COST : </span>$999
-          </p> */}
 
           <div className="flex flex-col gap-6 mt-2 tablet-s:flex-row">
             <p>
