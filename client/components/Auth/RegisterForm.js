@@ -61,7 +61,7 @@ const RegisterForm = () => {
           draggable: true,
           progress: undefined,
         });
-        router.push("/all-subscriptions");
+        router.push(`/${res.data._id}/all-subscriptions`);
       } catch (err) {
         console.log(err);
         toast.error(err.message, {

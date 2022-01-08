@@ -70,7 +70,7 @@ const LoginForm = () => {
             draggable: true,
             progress: undefined,
           });
-          router.push("/all-subscriptions");
+          router.push(`/${res.data._id}/all-subscriptions`);
         }
         // console.log(idTokenResult.token);
         // console.log(user);
@@ -116,7 +116,7 @@ const LoginForm = () => {
 
         console.log("create or update response", res);
 
-        router.push("/all-subscriptions");
+        router.push(`/${res.data._id}/all-subscriptions`);
       } catch (err) {
         console.log(err);
       }

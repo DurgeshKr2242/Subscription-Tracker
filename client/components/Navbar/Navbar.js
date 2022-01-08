@@ -14,7 +14,7 @@ import { auth } from "../../firebase";
 
 const Navbar = () => {
   const router = useRouter();
-  const { email, setEmail, setToken, token } = useGlobalAuthContext();
+  const { email, setEmail, setToken, token, userId } = useGlobalAuthContext();
 
   const logoutHandler = async (e) => {
     e.preventDefault();
@@ -41,7 +41,7 @@ const Navbar = () => {
           <SideBarIcon
             text="Subscriptions"
             icon={<RiPlayList2Line />}
-            onClick={() => router.push("/all-subscriptions")}
+            onClick={() => router.push(`/${userId}/all-subscriptions`)}
           />
         </li>
 
