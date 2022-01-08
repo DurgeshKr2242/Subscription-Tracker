@@ -1,15 +1,14 @@
 const mongoose = require("mongoose");
 const { ObjectId } = mongoose.Schema;
 
-const subscriptionSchema = new mongoose.Schema(
+//!CHECK ONCE WITH AYUSH IF TYPE NUMBER WILL STORE FLOAT VALUES AS WELL
+
+const postSchema = new mongoose.Schema(
   {
     service: {
       type: String,
       required: true,
     },
-
-    //!CHECK ONCE WITH AYUSH IF TYPE NUMBER WILL STORE FLOAT VALUES AS WELL
-
     cost: {
       type: mongoose.Types.Decimal128,
       index: true,
@@ -32,8 +31,13 @@ const subscriptionSchema = new mongoose.Schema(
       type: Array,
       default: [],
     },
+    creatorId: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: "User",
+    },
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model("Subscription", subscriptionSchema);
+module.exports = mongoose.model("Post", postSchema);

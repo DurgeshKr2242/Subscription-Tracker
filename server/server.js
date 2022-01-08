@@ -5,8 +5,14 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const { readdirSync } = require("fs");
 require("dotenv").config();
+const HttpError = require("./models/httpError");
 
 const app = express();
+
+// Routes
+
+const authRoutes = require("./routes/auth");
+const postsRoutes = require("./routes/post");
 
 // Middlewares
 
@@ -25,7 +31,23 @@ mongoose
     console.log("Error while connecting DB or LISTENING ON PORT", e);
   });
 
-readdirSync("./routes").map((r) => app.use("/api", require("./routes/" + r)));
+// readdirSync("./routes").map((r) => app.use("/api", require("./routes/" + r)));
+
+app.use("/api/posts", postsRoutes);
+app.use("/api/auth", authRoutes);
+
+app.use((req, res, next) => {
+  const error = new HttpError("Could not find this route.", 404);
+  throw error;
+});
+
+app.use((error, req, res, next) => {
+  if (res.headerSent) {
+    return next(error);
+  }
+  res.status(error.code || 500);
+  res.json({ message: error.message || "An unknown error occurred!" });
+});
 
 const port = process.env.PORT || 8000;
 app.listen(port, () => console.log(`Server is running on port ${port}`));
