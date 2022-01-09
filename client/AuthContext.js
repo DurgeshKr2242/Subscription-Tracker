@@ -25,13 +25,11 @@ const AuthProvider = ({ children }) => {
         try {
           const res = await currentUser(idTokenResult.token);
           setToken(idTokenResult.token);
-          setUser(user);
+          setUser(res.data);
           setProfilePic(res.data.picture);
           setUsername(res.data.name);
           setEmail(res.data.email);
           setUserId(res.data._id);
-          // console.log(idTokenResult.token);
-          // console.log(user);
 
           // console.log("Current user", res);
         } catch (err) {

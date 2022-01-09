@@ -24,3 +24,15 @@ export const currentUser = async (authtoken) => {
     }
   );
 };
+
+export const addFriend = async (authtoken, fid) => {
+  return axios.post(
+    `http://localhost:8000/api/auth/add-friend/${fid}`,
+    {},
+    {
+      headers: {
+        authtoken,
+      },
+    }
+  );
+};

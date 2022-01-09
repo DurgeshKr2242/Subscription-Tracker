@@ -12,6 +12,7 @@ const {
   currentUser,
   getUsers,
   getUserById,
+  addFriend,
 } = require("../controllers/authController");
 
 // Get all Users
@@ -22,4 +23,5 @@ router.get("/:uid", getUserById);
 router.post("/", authCheck, createorupdateuser);
 // Get the currently signedin user via token
 router.post("/current-user", authCheck, currentUser);
+router.post("/add-friend/:fid", authCheck, addFriend);
 module.exports = router;

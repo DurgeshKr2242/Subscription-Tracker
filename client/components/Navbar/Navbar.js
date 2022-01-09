@@ -24,10 +24,7 @@ const Navbar = () => {
       setToken(null);
       console.log("logout!!");
       console.log(email, token);
-      // dispatch({
-      //   type: "LOGOUT",
-      //   payload: null,
-      // });
+
       router.push("/auth/login");
     } catch (err) {
       console.log(err);
@@ -49,7 +46,7 @@ const Navbar = () => {
           <SideBarIcon
             text="People"
             icon={<GoPerson />}
-            onClick={() => console.log(email, token)}
+            onClick={() => router.push("/people")}
           />
         </li>
         {!token && (

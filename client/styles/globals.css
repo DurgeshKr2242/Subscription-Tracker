@@ -1,9 +1,9 @@
+@import url("https://cdn.syncfusion.com/ej2/material.css");
 @import url("https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
 @layer components {
   .sidebarIcon {
     @apply relative flex items-center justify-center w-12 h-12 mx-auto mt-2 mb-2 text-2xl transition-all duration-200 ease-linear bg-gray-200 shadow-md cursor-pointer hover:bg-bgyellow hover:text-black dark:hover:bg-bgyellow dark:hover:text-black dark:bg-gray-900 dark:shadow-gray-800 dark:text-bgyellow rounded-3xl hover:rounded-lg;
