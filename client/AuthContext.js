@@ -9,7 +9,7 @@ const AuthProvider = ({ children }) => {
   //   const [email, setEmail] = useState("");
   //   const [password, setPassword] = useState("");
   // const [user, setUser] = useState(null);
-
+  const [isLoading, setIsLoading] = useState(true);
   const [user, setUser] = useState(null);
   const [email, setEmail] = useState(null);
   const [userId, setUserId] = useState(null);
@@ -18,6 +18,7 @@ const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(null);
 
   useEffect(() => {
+    setIsLoading(true);
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
       if (user) {
         const idTokenResult = await user.getIdTokenResult();
@@ -30,9 +31,11 @@ const AuthProvider = ({ children }) => {
           setUsername(res.data.name);
           setEmail(res.data.email);
           setUserId(res.data._id);
-
+          setIsLoading(false);
           // console.log("Current user", res);
         } catch (err) {
+          setIsLoading(false);
+
           console.log(err);
         }
       }
@@ -56,6 +59,8 @@ const AuthProvider = ({ children }) => {
         setUsername,
         profilePic,
         setProfilePic,
+        isLoading,
+        setIsLoading,
       }}
     >
       {children}

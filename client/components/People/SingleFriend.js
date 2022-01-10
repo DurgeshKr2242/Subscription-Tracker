@@ -2,6 +2,7 @@ import React from "react";
 import { HiUserRemove } from "react-icons/hi";
 
 const SingleFriend = ({ pfp, name }) => {
+  console.log(pfp);
   return (
     <div className="flex items-center gap-4 px-4 py-4 my-6 shadow-md tablet-s:px-8 tablet-s:gap-8 dark:shadow-black rounded-xl bg-bgWhiteSec dark:bg-bgBlackSec">
       <div className="max-w-[13%] tablet-s:max-w-[10%]">

@@ -36,3 +36,7 @@ export const addFriend = async (authtoken, fid) => {
     }
   );
 };
+
+export const getPostByUserId = async (uid) => {
+  return axios.get(`http://localhost:8000/api/posts/user/${uid}`);
+};
