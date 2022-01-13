@@ -91,6 +91,8 @@ exports.getPostById = async (req, res, next) => {
 // *~~~~~~~~~~~~~~~~CREATING POST~~~~~~~~~~~~
 
 exports.createPost = async (req, res, next) => {
+  const userId = req.params.uid;
+
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return next(
@@ -98,16 +100,8 @@ exports.createPost = async (req, res, next) => {
     );
   }
 
-  const {
-    service,
-    cost,
-    imageUrl,
-    startedOn,
-    endsOn,
-    daysRemaining,
-    sharedWith,
-    creatorId,
-  } = req.body;
+  const { service, cost, imageUrl, startedOn, endsOn, duration, sharedWith } =
+    req.body;
 
   const createdPost = new Post({
     service,
@@ -115,14 +109,14 @@ exports.createPost = async (req, res, next) => {
     imageUrl,
     startedOn,
     endsOn,
-    daysRemaining,
+    duration,
     sharedWith,
-    creatorId,
+    creatorId: userId,
   });
 
   let user;
   try {
-    user = await User.findById(creatorId);
+    user = await User.findById(userId);
   } catch (err) {
     const error = new HttpError(
       "Oh NO! Creating post failed, please try again",
@@ -161,4 +155,108 @@ exports.createPost = async (req, res, next) => {
   }
 
   res.status(201).json({ post: createdPost });
+};
+
+// *~~~~~~~~~~~~~~~~UPDATE POST~~~~~~~~~~~~~~~~~
+
+exports.updatePost = async (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return next(
+      new HttpError("invalid inputs passed, please check your data", 422)
+    );
+  }
+
+  const { service, cost, imageUrl, startedOn, endsOn, duration, sharedWith } =
+    req.body;
+  const postId = req.params.pid;
+
+  let post;
+  try {
+    post = await Post.findById(postId);
+  } catch (err) {
+    const error = new HttpError(
+      "Something went wrong, could not update your post",
+      500
+    );
+    return next(error);
+  }
+
+  // if (post.creatorId.toString() !== req.userData.userId) {
+  //   const error = new HttpError(
+  //     "Trynna be sneaky aye! You are not allowed to edit this post. See ya!",
+  //     401
+  //   );
+  //   return next(error);
+  // }
+
+  post.service = service;
+  post.cost = cost;
+  post.imageUrl = imageUrl;
+  post.startedOn = startedOn;
+  post.endsOn = endsOn;
+  post.duration = duration;
+  post.sharedWith = sharedWith;
+
+  try {
+    await post.save();
+  } catch (err) {
+    const error = new HttpError(
+      "something went wrong, could not update your post",
+      500
+    );
+    return next(error);
+  }
+
+  res.status(200).json({ post: post.toObject({ getters: true }) });
+};
+
+// *~~~~~~~~~~~~~~DELETE POST~~~~~~~~~~~~~~~~
+
+exports.deletePost = async (req, res, next) => {
+  const postId = req.params.pid;
+
+  let post;
+
+  try {
+    post = await Post.findById(postId).populate("creatorId");
+  } catch (err) {
+    const error = new HttpError(
+      "Something went wrong, could not delete the post",
+      500
+    );
+    return next(error);
+  }
+
+  if (!post) {
+    const error = new HttpError("Could not find a post for this Id", 404);
+    return next(error);
+  }
+
+  // if (post.creatorId.id !== req.userData.userId) {
+  //   const error = new HttpError(
+  //     "Trynna be sneaky aye! You are not allowed to delete this post. See ya!",
+  //     403
+  //   );
+  //   return next(error);
+  // }
+
+  try {
+    // const sess = await mongoose.startSession();
+    // sess.startTransaction();
+    // await post.remove({ session: sess });
+    await post.remove();
+    post.creatorId.posts.pull(post);
+    // await post.creatorId.save({ session: sess });
+    await post.creatorId.save();
+    // await sess.commitTransaction();
+  } catch (err) {
+    const error = new HttpError(
+      "RIP Something went wrong, could not delete the post.",
+      500
+    );
+    return next(error);
+  }
+
+  res.status(200).json({ message: "Post Deleted!" });
 };

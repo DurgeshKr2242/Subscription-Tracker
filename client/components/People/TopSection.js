@@ -54,7 +54,7 @@ const TopSection = () => {
           <input
             type="text"
             id="addPeople"
-            className="w-full px-2 py-1 text-sm rounded-md text-bgWhiteSec bg-bgBlackSec"
+            className="inputBox"
             placeholder="Ender your Friend's id"
             value={friendId}
             onChange={(e) => setFriendId(e.target.value)}

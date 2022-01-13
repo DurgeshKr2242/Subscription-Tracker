@@ -11,7 +11,7 @@ const FriendsSection = () => {
   useEffect(() => {
     setFriends(user?.friends);
     console.log(friends);
-  }, [user]);
+  }, [user, friends]);
 
   return (
     <div className="w-full max-w-3xl px-2 mt-8">

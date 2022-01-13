@@ -85,7 +85,7 @@ exports.currentUser = async (req, res, next) => {
 
 //* ~~~~~~~~~~~~ ADD FRIEND ~~~~~~~~~~~~
 
-// TODO PERFORM A CHECK IF THE FRIEND IS ALREADY THERE IN MY LIST
+//  PERFORM A CHECK IF THE FRIEND IS ALREADY THERE IN MY LIST
 // Include Auth Middleware in routes
 exports.addFriend = async (req, res, next) => {
   const friendId = req.params.fid;
@@ -100,26 +100,29 @@ exports.addFriend = async (req, res, next) => {
   try {
     let user = await User.findOne({ email: req.user.email });
 
-    // let friendExists = user.friends.filter((friend) => {
-    //   // console.log("id found");
-    //   console.log(friend._id, foundFriend._id);
-    //   if (friend._id === foundFriend._id) return true;
-    // });
+    let friendExists = user.friends.filter((friend) => {
+      // console.log("id found");
+      console.log(friend._id, foundFriend._id);
+      if (friend._id.toString() === foundFriend._id.toString()) {
+        console.log("friend found");
+        return true;
+      }
+    });
 
-    // console.log(friendExists);
-    // if (friendExists.length > 0) {
-    //   const error = new HttpError("Friend Already Exists", 409);
-    //   return next(error);
-    // } else {
-    const updatedUser = await User.findByIdAndUpdate(
-      user._id,
-      { $push: { friends: foundFriend } },
-      { new: true }
-    );
+    console.log(friendExists);
+    if (friendExists.length > 0) {
+      const error = new HttpError("Friend Already Exists", 409);
+      return next(error);
+    } else {
+      const updatedUser = await User.findByIdAndUpdate(
+        user._id,
+        { $push: { friends: foundFriend } },
+        { new: true }
+      );
 
-    res.json(updatedUser);
-    // console.log("Friend UPDATED!!", updatedUser);
-    // }
+      res.json(updatedUser);
+      // console.log("Friend UPDATED!!", updatedUser);
+    }
   } catch (err) {
     //  throw new Error(err);
     const error = new HttpError("updating User Failed", 500);

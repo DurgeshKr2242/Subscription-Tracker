@@ -3,16 +3,19 @@ import Image from "next/image";
 import axios from "axios";
 import { useRouter } from "next/router";
 
-import { useGlobalAuthContext } from "../../AuthContext";
+import { useGlobalAuthContext } from "../../../AuthContext";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Multiselect from "multiselect-react-dropdown";
+import { getPostById } from "../../../functions/auth";
 
-const NewSubscriptionForm = () => {
+const EditSubscriptionForm = () => {
   const { user, userId } = useGlobalAuthContext();
   const router = useRouter();
   const [services, setServices] = useState([]);
   const [friendsDropdown, setFriendsDropdown] = useState([]);
+
+  // console.log(router.pathname);
 
   const [selected, setSelected] = useState([]);
   const [serviceInput, setServiceInput] = useState("");
@@ -40,23 +43,39 @@ const NewSubscriptionForm = () => {
       };
     });
     setFriendsDropdown(friendListForDropdown);
-    // console.log(friendListForDropdown);
   }, [user]);
 
+  useEffect(() => {
+    const { pid } = router.query;
+    // console.log(pid);
+    if (pid) {
+      const postById = async () => {
+        const post = await getPostById(pid);
+
+        // setAllPost(allPost.data.posts);
+        console.log(post.data.post);
+        setServiceInput(post.data.post.service);
+        setCostInput(post.data.post.cost);
+        setDateRange([
+          new Date(post.data.post.startedOn),
+          new Date(post.data.post.endsOn),
+        ]);
+        setDateInput([
+          new Date(post.data.post.startedOn),
+          new Date(post.data.post.endsOn),
+        ]);
+        setImageUrlInput(post.data.post.imageUrl);
+      };
+      postById();
+    }
+  }, [router]);
+
   const submitHandler = async () => {
-    // console.log(user);
-    // console.log(serviceInput);
-    // console.log(costInput);
-    // console.log(imageUrlInput);
-    // console.log(dateInput);
-    // console.log(sharedWith);
-    // console.log(getNoOfDays(dateInput[0], dateInput[1]));
     const duration = getNoOfDays(dateInput[0], dateInput[1]);
     let sharedWith = sharedWithInput.map((share) => {
       return share.friend;
     });
-
-    const createdPost = {
+    const updatedPost = {
       service: serviceInput,
       cost: costInput,
       imageUrl: imageUrlInput,
@@ -65,18 +84,19 @@ const NewSubscriptionForm = () => {
       duration: duration,
       sharedWith: sharedWith,
     };
+    const { pid } = router.query;
 
-    const res = await axios.post(
-      `http://localhost:8000/api/posts/${user._id}`,
-      createdPost
+    const res = await axios.patch(
+      `http://localhost:8000/api/posts/${pid}`,
+      updatedPost
       // {
       //   headers: {
       //     authtoken,
       //   },
       // }
     );
-
     console.log(res);
+    // console.log(pid);
   };
 
   const handleChange = (event) => {
@@ -88,6 +108,8 @@ const NewSubscriptionForm = () => {
       typeof value === "string" ? value.split(",") : value
     );
   };
+
+  //! ************TO GET THE IMAGE FROM API*************
 
   useEffect(() => {
     let config = {
@@ -115,6 +137,7 @@ const NewSubscriptionForm = () => {
     return () => clearTimeout(timeOut);
   }, [serviceInput]);
 
+  // ! ************TO GET THE IMAGE FROM API*************
   // const datePickHandler = (e) => {
   //   console.log(dateRange);
   // };
@@ -122,7 +145,7 @@ const NewSubscriptionForm = () => {
   return (
     <div className="flex flex-col items-center w-full p-5 rounded-lg tablet-s:max-w-[400px] max-w-[300px] dark:bg-bgBlackSec bg-bgWhiteSec">
       <h1 className="mt-6 mb-8 text-xl font-bold tracking-wide text-center underline uppercase decoration-4 decoration-bgyellow underline-offset-4 ">
-        Add a new Subscription
+        Edit Subscription
       </h1>
       <div className="flex flex-col items-center gap-4 tablet-s:flex-row">
         {services[0] && (
@@ -230,4 +253,4 @@ const NewSubscriptionForm = () => {
   );
 };
 
-export default NewSubscriptionForm;
+export default EditSubscriptionForm;

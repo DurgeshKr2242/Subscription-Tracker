@@ -10,7 +10,8 @@ const postSchema = new mongoose.Schema(
       required: true,
     },
     cost: {
-      type: mongoose.Types.Decimal128,
+      type: Number,
+      // type: mongoose.Types.Decimal128,
       index: true,
     },
 
@@ -23,7 +24,7 @@ const postSchema = new mongoose.Schema(
     endsOn: {
       type: Date,
     },
-    daysRemaining: {
+    duration: {
       type: Number,
       index: true,
     },
