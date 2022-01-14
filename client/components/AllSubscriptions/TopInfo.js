@@ -20,7 +20,7 @@ const TopInfo = ({ sortHandler }) => {
             <h1 className="mt-4 text-4xl ">₹ 570</h1>
           </div>
         </div>
-        {/* <div className="flex flex-col w-full gap-4 font-bold ">
+        <div className="flex flex-col w-full gap-4 font-bold ">
           <p className="text-sm font-bold text-left text-gray-400 ">Sort </p>
           <div className="flex justify-start w-full gap-0 border-2 rounded-xl border-bgyellow text-md">
             <motion.button
@@ -56,7 +56,7 @@ const TopInfo = ({ sortHandler }) => {
               Time Remaining
             </motion.button>
           </div>
-        </div> */}
+        </div>
       </div>
     </div>
   );

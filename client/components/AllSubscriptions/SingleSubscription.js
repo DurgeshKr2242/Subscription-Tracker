@@ -51,7 +51,11 @@ const SingleSubscription = ({ postData }) => {
   };
 
   return (
-    <div className="flex relative tablet-s:flex-row flex-col gap-5 w-full p-5 rounded-lg tablet-s:max-w-[400px] max-w-[300px] dark:bg-bgBlackSec bg-bgWhiteSec dark:text-white text-black items-center shadow-md dark:shadow-black shadow-gray-400">
+    <div
+      className={`${
+        dayRemainingInPercentage >= 100 && "grayscale"
+      } flex relative tablet-s:flex-row flex-col gap-5 w-full p-5 rounded-lg tablet-s:max-w-[400px] max-w-[300px] dark:bg-bgBlackSec bg-bgWhiteSec dark:text-white text-black items-center shadow-md dark:shadow-black shadow-gray-400`}
+    >
       <button
         onClick={() => setMenuOpen(!menuOpen)}
         className="z-20 absolute p-1.5 text-black rounded-full bg-bgyellow -right-2 -top-2"
@@ -145,11 +149,19 @@ const SingleSubscription = ({ postData }) => {
               }}
             ></div>
           )}
-          {dayRemainingInPercentage >= 75 && (
+          {dayRemainingInPercentage >= 75 && dayRemainingInPercentage <= 100 && (
             <div
               className="h-1 bg-red-500 rounded-full"
               style={{
                 width: `${dayRemainingInPercentage}%`,
+              }}
+            ></div>
+          )}
+          {dayRemainingInPercentage > 100 && (
+            <div
+              className="h-1 bg-red-500 rounded-full"
+              style={{
+                width: "100%",
               }}
             ></div>
           )}
