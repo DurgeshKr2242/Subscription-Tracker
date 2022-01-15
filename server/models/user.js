@@ -15,6 +15,10 @@ const userSchema = new mongoose.Schema(
       default: [],
     },
     posts: [{ type: mongoose.Schema.Types.ObjectId, ref: "Post" }],
+    spent: {
+      type: Number,
+      default: 0,
+    },
   },
   { timestamps: true }
 );

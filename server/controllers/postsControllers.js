@@ -139,6 +139,8 @@ exports.createPost = async (req, res, next) => {
     const post = await createdPost.save();
     console.log(createdPost);
     user.posts = user.posts.concat(post._id);
+    // user.spent = user.spent + cost;
+    user.spent = parseFloat(user.spent) + parseFloat(cost);
     // console.log("PUSHED!!!!!");
     await user.markModified("posts");
     // console.log("MODIFIED!!!!!");
@@ -190,6 +192,32 @@ exports.updatePost = async (req, res, next) => {
   //   return next(error);
   // }
 
+  let user;
+  try {
+    user = await User.findById(post.creatorId);
+  } catch (err) {
+    const error = new HttpError(
+      "Oh NO! Creating post failed, please try again",
+      500
+    );
+    return next(error);
+  }
+
+  if (!user) {
+    const error = new HttpError("Could not find user for provided id", 404);
+    return next(error);
+  }
+
+  try {
+    user.spent = user.spent - post.cost + cost;
+  } catch (err) {
+    const error = new HttpError(
+      "Oh NO! Creating post failed, please try again",
+      500
+    );
+    return next(error);
+  }
+
   post.service = service;
   post.cost = cost;
   post.imageUrl = imageUrl;
@@ -200,6 +228,7 @@ exports.updatePost = async (req, res, next) => {
 
   try {
     await post.save();
+    await user.save();
   } catch (err) {
     const error = new HttpError(
       "something went wrong, could not update your post",
@@ -233,6 +262,32 @@ exports.deletePost = async (req, res, next) => {
     return next(error);
   }
 
+  let user;
+  try {
+    user = await User.findById(post.creatorId);
+  } catch (err) {
+    const error = new HttpError(
+      "Oh NO! Creating post failed, please try again",
+      500
+    );
+    return next(error);
+  }
+
+  if (!user) {
+    const error = new HttpError("Could not find user for provided id", 404);
+    return next(error);
+  }
+
+  try {
+    user.spent = user.spent - post.cost;
+  } catch (err) {
+    const error = new HttpError(
+      "Oh NO! Creating post failed, please try again",
+      500
+    );
+    return next(error);
+  }
+
   // if (post.creatorId.id !== req.userData.userId) {
   //   const error = new HttpError(
   //     "Trynna be sneaky aye! You are not allowed to delete this post. See ya!",
@@ -249,6 +304,7 @@ exports.deletePost = async (req, res, next) => {
     post.creatorId.posts.pull(post);
     // await post.creatorId.save({ session: sess });
     await post.creatorId.save();
+    await user.save();
     // await sess.commitTransaction();
   } catch (err) {
     const error = new HttpError(

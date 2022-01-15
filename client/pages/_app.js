@@ -11,7 +11,7 @@ function MyApp({ Component, pageProps }) {
   return (
     <AuthProvider>
       <div id="appId" className="flex flex-row">
-        <p className="absolute z-10 text-lg font-bold underline uppercase dark:text-bgyellow top-5 left-3 decoration-black dark:decoration-bgyellow decoration-4 underline-offset-8">
+        <p className="absolute z-[60] text-lg font-bold underline uppercase dark:text-bgyellow top-5 left-3 decoration-black dark:decoration-bgyellow decoration-4 underline-offset-8">
           SUBS
         </p>
         <DarkModeSwitch />

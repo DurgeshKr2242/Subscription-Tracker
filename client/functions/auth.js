@@ -3,7 +3,7 @@ import axios from "axios";
 
 export const createOrUpdateUser = async (authtoken) => {
   return await axios.post(
-    "http://localhost:8000/api/auth",
+    `${process.env.NEXT_PUBLIC_API_URL}/auth`,
     {},
     {
       headers: {
@@ -15,7 +15,7 @@ export const createOrUpdateUser = async (authtoken) => {
 
 export const currentUser = async (authtoken) => {
   return await axios.post(
-    "http://localhost:8000/api/auth/current-user",
+    `${process.env.NEXT_PUBLIC_API_URL}/auth/current-user`,
     {},
     {
       headers: {
@@ -27,7 +27,7 @@ export const currentUser = async (authtoken) => {
 
 export const addFriend = async (authtoken, fid) => {
   return axios.post(
-    `http://localhost:8000/api/auth/add-friend/${fid}`,
+    `${process.env.NEXT_PUBLIC_API_URL}/auth/add-friend/${fid}`,
     {},
     {
       headers: {
@@ -38,8 +38,10 @@ export const addFriend = async (authtoken, fid) => {
 };
 
 export const getPostByUserId = async (uid) => {
-  return axios.get(`http://localhost:8000/api/posts/user/${uid}`);
+  // return axios.get(`http://localhost:8000/api/posts/user/${uid}`);
+  console.log(process.env.NEXT_PUBLIC_API_URL);
+  return axios.get(`${process.env.NEXT_PUBLIC_API_URL}/posts/user/${uid}`);
 };
 export const getPostById = async (pid) => {
-  return axios.get(`http://localhost:8000/api/posts/${pid}`);
+  return axios.get(`${process.env.NEXT_PUBLIC_API_URL}/posts/${pid}`);
 };

@@ -66,17 +66,24 @@ const NewSubscriptionForm = () => {
       sharedWith: sharedWith,
     };
 
-    const res = await axios.post(
-      `http://localhost:8000/api/posts/${user._id}`,
-      createdPost
-      // {
-      //   headers: {
-      //     authtoken,
-      //   },
-      // }
-    );
+    try {
+      console.log(user._id);
+      const res = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/posts/${user._id}`,
+        createdPost
+        // {
+        //   headers: {
+        //     authtoken,
+        //   },
+        // }
+      );
+      console.log(res);
+      router.push(`/${userId}/all-subscriptions`);
+    } catch (err) {
+      console.log(err);
+    }
 
-    console.log(res);
+    // console.log(err);
   };
 
   const handleChange = (event) => {

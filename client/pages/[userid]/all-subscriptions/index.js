@@ -11,11 +11,17 @@ const AllSubscriptions = () => {
   const [durationActive, setDurationActive] = useState(true);
   const [allPost, setAllPost] = useState([]);
   const router = useRouter();
-  const { isLoading, token, userId } = useGlobalAuthContext();
+  const { isLoading, token, userId, user } = useGlobalAuthContext();
+  // const [totalSubs, setTotalSubs] = useState("");
+  // const [totalSpent, setTotalSpent] = useState("");
+  // useEffect(() => {
+  //   console.log(user);
+  // }, [user]);
 
   useEffect(() => {
     if (!isLoading && !token) router.replace("/");
     if (!isLoading && token) {
+      // setTotalSpent(user.spent.toFixed(2));
       const getAllPost = async () => {
         const allPost = await getPostByUserId(userId);
 
@@ -60,15 +66,17 @@ const AllSubscriptions = () => {
           <div className="flex items-center justify-between w-full">
             <div className="flex flex-col items-start w-full">
               <p className="text-sm font-bold text-left text-gray-400 ">
-                Total Subsciptions
+                Active Subsciptions
               </p>
-              <h1 className="mt-4 text-4xl">06</h1>
+              <h1 className="mt-4 text-4xl font-bold">{allPost.length}</h1>
             </div>
             <div className="flex flex-col items-end w-full">
               <h3 className="text-sm font-bold text-left text-gray-400 ">
                 Total Spent
               </h3>
-              <h1 className="mt-4 text-4xl ">₹ 570</h1>
+              <h1 className="mt-4 text-4xl font-bold">{`₹ ${user?.spent?.toFixed(
+                2
+              )}`}</h1>
             </div>
           </div>
           <div className="flex flex-col w-full gap-4 font-bold ">
@@ -109,9 +117,13 @@ const AllSubscriptions = () => {
 
       <AddNewSubscription onClick={() => router.push(`/${userId}/new`)} />
 
-      {allPost.map((post) => {
-        return <SingleSubscription key={post._id} postData={post} />;
-      })}
+      <AnimatePresence>
+        {allPost.map((post, i) => {
+          return (
+            <SingleSubscription index={i} key={post._id} postData={post} />
+          );
+        })}
+      </AnimatePresence>
     </div>
   );
 };

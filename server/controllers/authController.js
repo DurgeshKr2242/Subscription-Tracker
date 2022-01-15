@@ -119,6 +119,11 @@ exports.addFriend = async (req, res, next) => {
         { $push: { friends: foundFriend } },
         { new: true }
       );
+      const updatedUser2 = await User.findByIdAndUpdate(
+        friendId,
+        { $push: { friends: user } },
+        { new: true }
+      );
 
       res.json(updatedUser);
       // console.log("Friend UPDATED!!", updatedUser);

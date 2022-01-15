@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { MdMenuOpen } from "react-icons/md";
 import { useGlobalAuthContext } from "../../AuthContext";
 import axios from "axios";
+import { motion, AnimatePresence } from "framer-motion";
 const month = [
   "Jan",
   "Feb",
@@ -18,7 +19,7 @@ const month = [
   "Dec",
 ];
 
-const SingleSubscription = ({ postData }) => {
+const SingleSubscription = ({ postData, index }) => {
   const {
     service,
     cost,
@@ -46,12 +47,30 @@ const SingleSubscription = ({ postData }) => {
   const dayRemainingInPercentage = Math.round((dayRemaining / duration) * 100);
 
   const deleteHandler = async () => {
-    const res = await axios.delete(`http://localhost:8000/api/posts/${id}`);
+    const res = await axios.delete(
+      `${process.env.NEXT_PUBLIC_API_URL}/posts/${id}`
+    );
     router.reload(window.location.pathname);
   };
 
   return (
-    <div
+    <motion.div
+      variants={{
+        hidden: {
+          y: -100,
+          opacity: 0,
+        },
+        visible: (i) => ({
+          y: 0,
+          opacity: 1,
+          transition: {
+            delay: index * 0.05,
+          },
+        }),
+      }}
+      initial="hidden"
+      animate="visible"
+      custom={index}
       className={`${
         dayRemainingInPercentage >= 100 && "grayscale"
       } flex relative tablet-s:flex-row flex-col gap-5 w-full p-5 rounded-lg tablet-s:max-w-[400px] max-w-[300px] dark:bg-bgBlackSec bg-bgWhiteSec dark:text-white text-black items-center shadow-md dark:shadow-black shadow-gray-400`}
@@ -62,24 +81,31 @@ const SingleSubscription = ({ postData }) => {
       >
         <MdMenuOpen />
       </button>
-      {menuOpen && (
-        <div className="absolute top-0 bottom-0 right-0 z-10 flex flex-col justify-center w-[33%] gap-3 px-2 bg-black ">
-          <p
-            className="w-full py-1 text-center rounded-md cursor-pointer hover:bg-bgBlackSec"
-            onClick={() => router.push(`/${userId}/edit/${id}`)}
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.div
+            animate={{ width: "33%", height: "100%", scale: 1 }}
+            initial={{ width: 0, height: 0, scale: 0 }}
+            exit={{ width: 0, height: 0, scale: 0 }}
+            className="absolute top-0 bottom-0 right-0 z-10 flex flex-col justify-center w-[33%] gap-3 px-2 bg-black "
           >
-            Edit
-          </p>
-          <p
-            className="w-full py-1 text-center rounded-md cursor-pointer hover:bg-bgBlackSec"
-            onClick={deleteHandler}
-          >
-            Delete
-          </p>
-        </div>
-      )}
+            <p
+              className="w-full py-1 text-center rounded-md cursor-pointer hover:bg-bgBlackSec"
+              onClick={() => router.push(`/${userId}/edit/${id}`)}
+            >
+              Edit
+            </p>
+            <p
+              className="w-full py-1 text-center rounded-md cursor-pointer hover:bg-bgBlackSec"
+              onClick={deleteHandler}
+            >
+              Delete
+            </p>
+          </motion.div>
+        )}
+      </AnimatePresence>
       <img
-        className="rounded-lg shadow-md max-w-24 max-h-24 dark:shadow-black shadow-gray-400"
+        className="rounded-lg shadow-md max-w-[80px] min-w-[80px] dark:shadow-black shadow-gray-400"
         src={imageUrl}
         alt="sawoLabsLogo"
       />
@@ -167,7 +193,7 @@ const SingleSubscription = ({ postData }) => {
           )}
         </div>
       </div>
-    </div>
+    </motion.div>
     // <div className="relative flex flex-col gap-0 mb-0 text-sm">
     //   <div className="relative flex flex-col items-center gap-8 tracking-wide tablet-s:flex-row py-8 pl-4 pr-8 shadow-md tablet-s:px-8 tablet-s:gap-8 dark:shadow-black rounded-xl bg-bgWhiteSec dark:bg-bgBlackSec min-w-[300px]">
     //     <img

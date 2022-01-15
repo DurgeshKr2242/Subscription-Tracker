@@ -11,13 +11,13 @@ const TopInfo = ({ sortHandler }) => {
             <p className="text-sm font-bold text-left text-gray-400 ">
               Total Subsciptions
             </p>
-            <h1 className="mt-4 text-4xl">06</h1>
+            <p className="mt-4 text-4xl font-bold">06</p>
           </div>
           <div className="flex flex-col items-end w-full">
             <h3 className="text-sm font-bold text-left text-gray-400 ">
               Total Spent
             </h3>
-            <h1 className="mt-4 text-4xl ">₹ 570</h1>
+            <h1 className="mt-4 text-4xl font-bold">₹ 570</h1>
           </div>
         </div>
         <div className="flex flex-col w-full gap-4 font-bold ">

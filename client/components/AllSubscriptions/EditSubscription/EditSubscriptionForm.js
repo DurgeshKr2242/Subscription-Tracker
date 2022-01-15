@@ -87,7 +87,7 @@ const EditSubscriptionForm = () => {
     const { pid } = router.query;
 
     const res = await axios.patch(
-      `http://localhost:8000/api/posts/${pid}`,
+      `${process.env.NEXT_PUBLIC_API_URL}/posts/${pid}`,
       updatedPost
       // {
       //   headers: {
@@ -96,6 +96,7 @@ const EditSubscriptionForm = () => {
       // }
     );
     console.log(res);
+    router.push(`/${userId}/all-subscriptions`);
     // console.log(pid);
   };
 
