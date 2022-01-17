@@ -4,13 +4,11 @@ import { FcGoogle } from "react-icons/fc";
 import { motion } from "framer-motion";
 import { toast } from "react-toastify";
 import { signInWithPopup } from "firebase/auth";
-// import { googleAuthProvider } from "../../firebase";
 import { googleAuthProvider } from "../../firebase";
 import { auth } from "../../firebase";
 import { useGlobalAuthContext } from "../../AuthContext";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { createOrUpdateUser } from "../../functions/auth";
-// import axios from "axios";
 
 const LoginForm = () => {
   const [loginEmail, setLoginEmail] = useState("youngporkey2242@gmail.com");
@@ -20,15 +18,10 @@ const LoginForm = () => {
   const {
     token,
     setToken,
-    email,
     setEmail,
-    user,
     setUser,
-    userId,
     setUserId,
-    username,
     setUsername,
-    profilePic,
     setProfilePic,
   } = useGlobalAuthContext();
 
@@ -39,19 +32,17 @@ const LoginForm = () => {
   const loginSubmitHandler = async (e) => {
     e.preventDefault();
     try {
-      console.log("LOGGING IN!!!");
-      console.log(auth);
       const userCredential = await signInWithEmailAndPassword(
         auth,
         loginEmail,
         password
       );
-      console.log("LOGed IN!!!");
+
       const user = userCredential.user;
       const idTokenResult = await user.getIdTokenResult();
       try {
         const res = await createOrUpdateUser(idTokenResult.token);
-        console.log(res);
+
         if (res?.data) {
           setToken(idTokenResult.token);
           setUser(user);
@@ -60,7 +51,6 @@ const LoginForm = () => {
           setEmail(res.data.email);
           setUserId(res.data._id);
 
-          console.log("VALUES UPDATED YO!!");
           toast.success("LOGGED IN", {
             position: "top-right",
             autoClose: 5000,
@@ -72,12 +62,9 @@ const LoginForm = () => {
           });
           router.push(`/${res.data._id}/all-subscriptions`);
         }
-        // console.log(idTokenResult.token);
-        // console.log(user);
-
-        console.log("create or update response", res);
       } catch (err) {
         console.log(err);
+        console.log(err.code);
       }
     } catch (err) {
       console.log(err);
@@ -102,7 +89,6 @@ const LoginForm = () => {
 
       try {
         const res = await createOrUpdateUser(idTokenResult.token);
-        console.log(res);
         if (res?.data) {
           setToken(idTokenResult.token);
           setUser(user);
@@ -110,11 +96,7 @@ const LoginForm = () => {
           setUsername(res.data.name);
           setEmail(res.data.email);
           setUserId(res.data._id);
-
-          console.log("VALUES UPDATED YO!!");
         }
-
-        console.log("create or update response", res);
 
         router.push(`/${res.data._id}/all-subscriptions`);
       } catch (err) {
@@ -145,44 +127,38 @@ const LoginForm = () => {
       <p className="mb-8 text-2xl font-extrabold tracking-wide underline dark:text-white text-bgblack decoration-bgyellow underline-offset-2 decoration-4">
         LOGIN
       </p>
-      <button onClick={googleLoginHandler} className="rounded-full">
+      {/* <button onClick={googleLoginHandler} className="rounded-full">
         <FcGoogle className="text-3xl" />
       </button>
       <div className="relative flex items-center w-full gap-3 mt-8">
         <div className="inline-block w-full h-1 bg-gray-200 dark:bg-bgblack"></div>
         <p>OR</p>
         <div className="inline-block w-full h-1 bg-gray-200 dark:bg-bgblack"></div>
-      </div>
+      </div> */}
       <form
-        className="flex flex-col items-center w-full"
+        className="flex flex-col items-center w-full gap-8"
         onSubmit={loginSubmitHandler}
       >
-        <div className="relative w-full mt-8">
-          <input
-            placeholder="Enter your email address"
-            className="inputBox peer dark:text-gray-100"
-            id="email"
-            type="email"
-            value={loginEmail}
-            onChange={(e) => setLoginEmail(e.target.value)}
-          />
-          <label className="inputLabel" htmlFor="email">
-            Email Id
-          </label>
-        </div>
-        <div className="relative w-full mt-8">
-          <input
-            placeholder="Enter your email address"
-            className="inputBox peer dark:text-gray-100"
-            id="password"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <label className="inputLabel" htmlFor="password">
-            Password
-          </label>
-        </div>
+        <input
+          placeholder="Enter your email address"
+          className="inputBox bg-bgblack"
+          id="email"
+          type="email"
+          value={loginEmail}
+          onChange={(e) => setLoginEmail(e.target.value)}
+        />
+        {/* </div> */}
+        {/* <div className="relative w-full mt-8"> */}
+        <input
+          placeholder="Enter your password"
+          className=" inputBox peer bg-bgblack"
+          id="password"
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+
+        {/* </div> */}
         <button
           type="submit"
           className="px-4 py-2 mt-8 text-sm font-extrabold tracking-wide uppercase rounded-md shadow-md bg-bgyellow shadow-yellow-900 text-bgblack"

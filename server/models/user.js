@@ -10,10 +10,13 @@ const userSchema = new mongoose.Schema(
       required: true,
       index: true,
     },
-    friends: {
-      type: Array,
-      default: [],
-    },
+    // friends: {
+    //   type: Array,
+    //   default: [],
+    // },
+    friends: [
+      { type: mongoose.Schema.Types.ObjectId, ref: "User", default: null },
+    ],
     posts: [{ type: mongoose.Schema.Types.ObjectId, ref: "Post" }],
     spent: {
       type: Number,

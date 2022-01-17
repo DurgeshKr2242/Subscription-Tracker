@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Image from "next/image";
+// import Image from "next/image";
 import axios from "axios";
 import { useRouter } from "next/router";
 
@@ -11,20 +11,17 @@ import Multiselect from "multiselect-react-dropdown";
 const NewSubscriptionForm = () => {
   const { user, userId } = useGlobalAuthContext();
   const router = useRouter();
+
   const [services, setServices] = useState([]);
   const [friendsDropdown, setFriendsDropdown] = useState([]);
-
-  const [selected, setSelected] = useState([]);
   const [serviceInput, setServiceInput] = useState("");
   const [costInput, setCostInput] = useState("");
   const [imageUrlInput, setImageUrlInput] = useState("");
   const [dateInput, setDateInput] = useState([]);
   const [sharedWithInput, setSharedWithInput] = useState([]);
-
   const [dateRange, setDateRange] = useState([null, null]);
   const [startDatePicker, endDatePicker] = dateRange;
   const [personName, setPersonName] = React.useState([]);
-
   const getNoOfDays = (date1, date2) => {
     var Difference_In_Time = date2.getTime() - date1.getTime();
     var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
@@ -40,17 +37,9 @@ const NewSubscriptionForm = () => {
       };
     });
     setFriendsDropdown(friendListForDropdown);
-    // console.log(friendListForDropdown);
   }, [user]);
 
   const submitHandler = async () => {
-    // console.log(user);
-    // console.log(serviceInput);
-    // console.log(costInput);
-    // console.log(imageUrlInput);
-    // console.log(dateInput);
-    // console.log(sharedWith);
-    // console.log(getNoOfDays(dateInput[0], dateInput[1]));
     const duration = getNoOfDays(dateInput[0], dateInput[1]);
     let sharedWith = sharedWithInput.map((share) => {
       return share.friend;
@@ -67,7 +56,6 @@ const NewSubscriptionForm = () => {
     };
 
     try {
-      console.log(user._id);
       const res = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/posts/${user._id}`,
         createdPost
@@ -77,24 +65,21 @@ const NewSubscriptionForm = () => {
         //   },
         // }
       );
-      console.log(res);
       router.push(`/${userId}/all-subscriptions`);
     } catch (err) {
       console.log(err);
     }
-
-    // console.log(err);
   };
 
-  const handleChange = (event) => {
-    const {
-      target: { value },
-    } = event;
-    setPersonName(
-      // On autofill we get a stringified value.
-      typeof value === "string" ? value.split(",") : value
-    );
-  };
+  // const handleChange = (event) => {
+  //   const {
+  //     target: { value },
+  //   } = event;
+  //   setPersonName(
+  //     // On autofill we get a stringified value.
+  //     typeof value === "string" ? value.split(",") : value
+  //   );
+  // };
 
   useEffect(() => {
     let config = {
@@ -112,7 +97,6 @@ const NewSubscriptionForm = () => {
           );
           setServices(res.data);
           setImageUrlInput(res.data[0].logo);
-          // console.log(res);
         } catch (err) {
           console.log(err);
         }
@@ -121,10 +105,6 @@ const NewSubscriptionForm = () => {
     }, 500);
     return () => clearTimeout(timeOut);
   }, [serviceInput]);
-
-  // const datePickHandler = (e) => {
-  //   console.log(dateRange);
-  // };
 
   return (
     <div className="flex flex-col items-center w-full p-5 rounded-lg tablet-s:max-w-[400px] max-w-[300px] dark:bg-bgBlackSec bg-bgWhiteSec">
@@ -143,7 +123,7 @@ const NewSubscriptionForm = () => {
           <input
             list="services"
             placeholder="Select a service"
-            className=" inputBox peer bg-bgblack"
+            className="bg-white  inputBox peer dark:bg-bgblack"
             id="ServiceProvider"
             type="text"
             value={serviceInput}
@@ -160,7 +140,7 @@ const NewSubscriptionForm = () => {
           <div className="relative mt-8">
             <input
               placeholder="Cost"
-              className="inputBox peer bg-bgblack"
+              className="bg-white inputBox peer dark:bg-bgblack"
               id="Cost"
               type="number"
               value={costInput}
@@ -181,7 +161,7 @@ const NewSubscriptionForm = () => {
               }}
               withPortal
               placeholderText="Select Date"
-              className="inputBox bg-bgblack"
+              className="bg-white inputBox dark:bg-bgblack"
             />
           </div>
           <div className="w-full mt-6 mb-2">
@@ -193,7 +173,7 @@ const NewSubscriptionForm = () => {
               displayValue="key"
               showCheckbox
               placeholder="Select People"
-              className=" inputBox bg-bgblack"
+              className="bg-white  inputBox dark:bg-bgblack"
               id="css_custom"
               style={{
                 chips: { background: "#141921" },

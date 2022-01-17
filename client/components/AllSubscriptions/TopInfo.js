@@ -14,7 +14,7 @@ const TopInfo = ({ sortHandler }) => {
             <p className="mt-4 text-4xl font-bold">06</p>
           </div>
           <div className="flex flex-col items-end w-full">
-            <h3 className="text-sm font-bold text-left text-gray-400 ">
+            <h3 className="text-sm font-bold text-left text-gray-900 dark:text-gray-400">
               Total Spent
             </h3>
             <h1 className="mt-4 text-4xl font-bold">₹ 570</h1>

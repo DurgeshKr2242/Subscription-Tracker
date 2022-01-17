@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Image from "next/image";
+// import Image from "next/image";
 import axios from "axios";
 import { useRouter } from "next/router";
 
@@ -12,18 +12,14 @@ import { getPostById } from "../../../functions/auth";
 const EditSubscriptionForm = () => {
   const { user, userId } = useGlobalAuthContext();
   const router = useRouter();
+
   const [services, setServices] = useState([]);
   const [friendsDropdown, setFriendsDropdown] = useState([]);
-
-  // console.log(router.pathname);
-
-  const [selected, setSelected] = useState([]);
   const [serviceInput, setServiceInput] = useState("");
   const [costInput, setCostInput] = useState("");
   const [imageUrlInput, setImageUrlInput] = useState("");
   const [dateInput, setDateInput] = useState([]);
   const [sharedWithInput, setSharedWithInput] = useState([]);
-
   const [dateRange, setDateRange] = useState([null, null]);
   const [startDatePicker, endDatePicker] = dateRange;
   const [personName, setPersonName] = React.useState([]);
@@ -47,13 +43,11 @@ const EditSubscriptionForm = () => {
 
   useEffect(() => {
     const { pid } = router.query;
-    // console.log(pid);
     if (pid) {
       const postById = async () => {
         const post = await getPostById(pid);
 
         // setAllPost(allPost.data.posts);
-        console.log(post.data.post);
         setServiceInput(post.data.post.service);
         setCostInput(post.data.post.cost);
         setDateRange([
@@ -95,9 +89,7 @@ const EditSubscriptionForm = () => {
       //   },
       // }
     );
-    console.log(res);
     router.push(`/${userId}/all-subscriptions`);
-    // console.log(pid);
   };
 
   const handleChange = (event) => {
@@ -128,7 +120,6 @@ const EditSubscriptionForm = () => {
           );
           setServices(res.data);
           setImageUrlInput(res.data[0].logo);
-          // console.log(res);
         } catch (err) {
           console.log(err);
         }
@@ -137,11 +128,6 @@ const EditSubscriptionForm = () => {
     }, 500);
     return () => clearTimeout(timeOut);
   }, [serviceInput]);
-
-  // ! ************TO GET THE IMAGE FROM API*************
-  // const datePickHandler = (e) => {
-  //   console.log(dateRange);
-  // };
 
   return (
     <div className="flex flex-col items-center w-full p-5 rounded-lg tablet-s:max-w-[400px] max-w-[300px] dark:bg-bgBlackSec bg-bgWhiteSec">

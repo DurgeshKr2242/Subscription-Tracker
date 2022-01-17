@@ -5,10 +5,6 @@ import { currentUser } from "./functions/auth";
 const AuthContext = React.createContext();
 
 const AuthProvider = ({ children }) => {
-  //   const [username, setUsername] = useState("");
-  //   const [email, setEmail] = useState("");
-  //   const [password, setPassword] = useState("");
-  // const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [user, setUser] = useState(null);
   const [email, setEmail] = useState(null);
@@ -32,7 +28,6 @@ const AuthProvider = ({ children }) => {
           setEmail(res.data.email);
           setUserId(res.data._id);
           setIsLoading(false);
-          // console.log("Current user", res);
         } catch (err) {
           setIsLoading(false);
 

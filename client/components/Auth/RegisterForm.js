@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useGlobalAuthContext } from "../../AuthContext";
 import { useRouter } from "next/router";
+import { createOrUpdateUser } from "../../functions/auth";
 const RegisterForm = () => {
   const [registrationEmail, setRegistrationEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -42,16 +43,15 @@ const RegisterForm = () => {
 
       try {
         const res = await createOrUpdateUser(idTokenResult.token);
-        setToken(idTokenResult.token);
-        setUser(user);
-        setProfilePic(res.data.picture);
-        setUsername(res.data.name);
-        setEmail(res.data.email);
-        setUserId(res.data._id);
-        // console.log(idTokenResult.token);
-        // console.log(user);
+        if (res?.data) {
+          setToken(idTokenResult.token);
+          setUser(user);
+          setProfilePic(res.data.picture);
+          setUsername(res.data.name);
+          setEmail(res.data.email);
+          setUserId(res.data._id);
+        }
 
-        console.log("created user", res);
         toast.success("LOGGED IN", {
           position: "top-right",
           autoClose: 5000,
@@ -61,6 +61,7 @@ const RegisterForm = () => {
           draggable: true,
           progress: undefined,
         });
+        router.reload();
         router.push(`/${res.data._id}/all-subscriptions`);
       } catch (err) {
         console.log(err);

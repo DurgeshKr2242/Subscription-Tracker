@@ -1,6 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "react-toastify";
+import {
+  uploadBytesResumable,
+  getDownloadURL,
+  ref,
+  deleteObject,
+} from "firebase/storage";
+import { updateProfile } from "firebase/auth";
+import { auth, storage } from "../../firebase";
+import axios from "axios";
 
 import { addFriend } from "../../functions/auth";
 import { useGlobalAuthContext } from "../../AuthContext";
@@ -12,21 +21,30 @@ const TopSection = () => {
   // const [durationActive, setDurationActive] = useState(true);
   const [editMode, setEditMode] = useState(false);
   const [friendId, setFriendId] = useState("");
-  const { token, user } = useGlobalAuthContext();
+  const { token, user, userId } = useGlobalAuthContext();
 
   const [editedName, setEditedName] = useState("");
   const [editedImgUrl, setEditedImgUrl] = useState("");
   const [selectedImage, setSelectedImage] = useState(null);
-  const [selectedImageUrl, setSelectedImageUrl] = useState(null);
   useEffect(() => {
     setEditedName(user?.name);
     setEditedImgUrl(user?.picture);
   }, [user]);
 
+  const handleImgInput = (e) => {
+    let pickedFile;
+    if (e.target.files && e.target.files.length === 1) {
+      setEditedImgUrl(URL.createObjectURL(e.target.files[0]));
+      console.log(editedImgUrl);
+      pickedFile = e.target.files[0];
+      setSelectedImage(pickedFile);
+    }
+    console.log("Your selected cover img is: ", selectedImage);
+  };
+
   const addFriendHandler = async (e) => {
     try {
       const res = await addFriend(token, friendId);
-      // console.log(res);
       toast.success("Friend Added", {
         position: "top-right",
         autoClose: 5000,
@@ -37,10 +55,6 @@ const TopSection = () => {
         progress: undefined,
       });
     } catch (err) {
-      console.log(err.response.data);
-      // console.log(err.response.status);
-      // console.log(err.response.headers);
-      // console.log(err.response.message);
       toast.error(err.response.data.message, {
         position: "top-right",
         autoClose: 5000,
@@ -53,18 +67,63 @@ const TopSection = () => {
     }
   };
 
-  const handleImgInput = (e) => {
-    // console.log(e);
-    // setEditedImgUrl(e.target.value);
+  function uploadTaskPromise(file) {
+    return new Promise(function (resolve, reject) {
+      if (!file) return;
 
-    let pickedFile;
-    if (e.target.files && e.target.files.length === 1) {
-      setEditedImgUrl(URL.createObjectURL(e.target.files[0]));
-      console.log(editedImgUrl);
-      pickedFile = e.target.files[0];
-      setSelectedImage(pickedFile);
+      const storageRef = ref(storage, `pfp/${file.name}`);
+      const uploadTask = uploadBytesResumable(storageRef, file);
+
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          const prog = Math.round(
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+          );
+          console.log(prog);
+        },
+        (error) => {
+          console.log("ERRRRR!!!!!!");
+          alert("Error inside upload file function", error);
+          reject();
+        },
+        () => {
+          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+            console.log("File available at", downloadURL);
+            resolve(downloadURL);
+          });
+        }
+      );
+    });
+  }
+
+  const updateProfileHandler = async (e) => {
+    e.preventDefault();
+    let storageURL;
+    try {
+      storageURL = await uploadTaskPromise(selectedImage);
+
+      try {
+        await updateProfile(auth.currentUser, {
+          displayName: editedName,
+          photoURL: storageURL,
+        });
+      } catch (err) {
+        console.log(err);
+      }
+
+      const updatedUser = {
+        name: editedName,
+        picture: storageURL,
+      };
+      const res = await axios.patch(
+        `${process.env.NEXT_PUBLIC_API_URL}/auth/${userId}`,
+        updatedUser
+      );
+    } catch (err) {
+      console.log(err);
+      console.log(err.code);
     }
-    console.log("Your selected cover img is: ", selectedImage);
   };
 
   return (
@@ -81,7 +140,7 @@ const TopSection = () => {
             <img
               src={user?.picture}
               alt="profilePic"
-              className="absolute border-8 rounded-full -top-14 border-bgblack"
+              className="absolute border-8 -top-14 border-bgblack inline object-cover w-[110px] h-[110px] rounded-full"
             />
             <p className="text-2xl font-bold tracking-wide text-center ">
               {user?.name}
@@ -161,6 +220,7 @@ const TopSection = () => {
               type="text"
               className="text-2xl font-bold tracking-wide text-center inputBox"
               value={editedName}
+              onChange={(e) => setEditedName(e.target.value)}
             />
             {/* <p className="text-2xl font-bold tracking-wide text-center ">
                 {user?.name}
@@ -190,19 +250,19 @@ const TopSection = () => {
           </div>
 
           <div className="flex flex-wrap justify-center">
-            <input
+            {/* <input
               type="text"
               id="addPeople"
               className="inputBox"
               placeholder="Ender your Friend's id"
               value={friendId}
               onChange={(e) => setFriendId(e.target.value)}
-            />
+            /> */}
             <button
-              onClick={addFriendHandler}
+              onClick={updateProfileHandler}
               className="px-4 py-1 mt-2 text-sm tracking-wide bg-gray-800 rounded-md text-bgWhiteSec"
             >
-              Add Friend
+              Update Profile
             </button>
           </div>
         </div>

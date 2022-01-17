@@ -1,4 +1,4 @@
-@import url("https://cdn.syncfusion.com/ej2/material.css");
+/* @import url("https://cdn.syncfusion.com/ej2/material.css"); */
 @import url("https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
 
 @tailwind base;
@@ -16,7 +16,7 @@
     @apply w-full text-sm text-gray-900 placeholder-transparent bg-transparent border-b-2 border-b-gray-400 focus:outline-none focus:border-b-yellow-400;
   } */
   .inputBox {
-    @apply w-full px-4 py-1.5 text-base placeholder:italic rounded-md text-bgWhiteSec bg-bgBlackSec;
+    @apply w-full px-4 py-1.5 text-base placeholder:italic rounded-md text-bgblack bg-bgWhiteSec dark:text-bgWhiteSec dark:bg-bgblack shadow-sm shadow-gray-700/30 dark:shadow-gray-600/30;
   }
   /* .inputLabel {
     @apply absolute left-0 text-sm text-gray-400 transition-all cursor-text -top-5 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-0 peer-focus:-top-5 peer-focus:text-gray-600 peer-focus:text-sm;

@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useRouter } from "next/router";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 // import "rsuite/dist/rsuite.min.css";
@@ -8,10 +9,15 @@ import DarkModeSwitch from "../components/Navbar/DarkModeSwitch";
 import { AuthProvider } from "../AuthContext";
 
 function MyApp({ Component, pageProps }) {
+  const router = useRouter();
+
   return (
     <AuthProvider>
       <div id="appId" className="flex flex-row">
-        <p className="absolute z-[60] text-lg font-bold underline uppercase dark:text-bgyellow top-5 left-3 decoration-black dark:decoration-bgyellow decoration-4 underline-offset-8">
+        <p
+          onClick={() => router.push(`/`)}
+          className="absolute z-[60] text-lg font-bold underline uppercase dark:text-bgyellow top-5 left-3 decoration-black dark:decoration-bgyellow decoration-4 underline-offset-8"
+        >
           SUBS
         </p>
         <DarkModeSwitch />

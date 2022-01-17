@@ -1,12 +1,18 @@
 const User = require("../models/user");
 const HttpError = require("../models/httpError");
+const { validationResult } = require("express-validator");
 
 exports.createorupdateuser = async (req, res, next) => {
   const { name, picture, email } = req.user;
 
   const user = await User.findOneAndUpdate(
     { email },
-    { name: name || email.split("@")[0], picture: picture },
+    {
+      name: name || email.split("@")[0],
+      picture:
+        picture ||
+        "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
+    },
     { new: true }
   );
 
@@ -17,11 +23,63 @@ exports.createorupdateuser = async (req, res, next) => {
     const newUser = await new User({
       email,
       name: name || email.split("@")[0],
-      picture: picture,
+      picture:
+        picture ||
+        "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
     }).save();
     res.json(newUser);
     // console.log("CREATED USER", newUser);
   }
+};
+
+// *~~~~~~~~~~UPDATE USERS~~~~~~~~~~~~~
+
+exports.updateUser = async (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return next(
+      new HttpError("invalid inputs passed, please check your data", 422)
+    );
+  }
+
+  const { name, picture } = req.body;
+  const userId = req.params.uid;
+
+  let user;
+  try {
+    user = await User.findById(userId);
+    console.log(user);
+  } catch (err) {
+    const error = new HttpError(
+      "Something went wrong, could not update user",
+      500
+    );
+    return next(error);
+  }
+  console.log(user);
+
+  if (!user) {
+    const error = new HttpError("Could not find user for provided id", 404);
+    return next(error);
+  }
+
+  user.name = name;
+  user.picture = picture;
+
+  try {
+    console.log("SAVING!!!");
+    await user.save();
+    console.log("SAVED!!!");
+  } catch (err) {
+    console.log(err);
+    const error = new HttpError(
+      "something went wrong while saving, could not update user",
+      500
+    );
+    return next(error);
+  }
+
+  res.status(200).json({ updatedUser: user.toObject({ getters: true }) });
 };
 
 // *~~~~~~~~~~GET ALL USERS~~~~~~~~~~~~~
@@ -70,17 +128,19 @@ exports.getUserById = async (req, res, next) => {
 //* ~~~~~~~~~~~~ CURRENT USER ~~~~~~~~~~~~
 
 exports.currentUser = async (req, res, next) => {
-  User.findOne({ email: req.user.email }).exec((err, user) => {
-    if (err) {
-      //  throw new Error(err);
-      const error = new HttpError(
-        "Fetching current users failed, please try again later.",
-        500
-      );
-      return next(error);
-    }
-    res.json(user);
-  });
+  User.findOne({ email: req.user.email })
+    .populate("friends")
+    .exec((err, user) => {
+      if (err) {
+        //  throw new Error(err);
+        const error = new HttpError(
+          "Fetching current users failed, please try again later.",
+          500
+        );
+        return next(error);
+      }
+      res.json(user);
+    });
 };
 
 //* ~~~~~~~~~~~~ ADD FRIEND ~~~~~~~~~~~~
@@ -116,12 +176,12 @@ exports.addFriend = async (req, res, next) => {
     } else {
       const updatedUser = await User.findByIdAndUpdate(
         user._id,
-        { $push: { friends: foundFriend } },
+        { $push: { friends: foundFriend._id } },
         { new: true }
       );
       const updatedUser2 = await User.findByIdAndUpdate(
         friendId,
-        { $push: { friends: user } },
+        { $push: { friends: user._id } },
         { new: true }
       );
 

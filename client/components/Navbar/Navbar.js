@@ -8,6 +8,7 @@ import { GoPerson } from "react-icons/go";
 import { FaMoneyCheck } from "react-icons/fa";
 import { GiExitDoor } from "react-icons/gi";
 import { BsFillUnlockFill } from "react-icons/bs";
+import { AiTwotoneHome } from "react-icons/ai";
 
 import { useGlobalAuthContext } from "../../AuthContext";
 import { auth } from "../../firebase";
@@ -22,8 +23,6 @@ const Navbar = () => {
       await signOut(auth);
       setEmail(null);
       setToken(null);
-      console.log("logout!!");
-      console.log(email, token);
 
       router.push("/auth/login");
     } catch (err) {
@@ -36,19 +35,28 @@ const Navbar = () => {
       <ul className="flex flex-row items-end justify-center gap-4 pt-6 tablet-s:gap-4 tablet-s:flex-col tablet-s:items-center tablet-s:justify-start">
         <li>
           <SideBarIcon
+            text="Home"
+            icon={<AiTwotoneHome />}
+            onClick={() => router.push(`/`)}
+          />
+        </li>
+        <li>
+          <SideBarIcon
             text="Subscriptions"
             icon={<RiPlayList2Line />}
             onClick={() => router.push(`/${userId}/all-subscriptions`)}
           />
         </li>
 
-        <li>
-          <SideBarIcon
-            text="People"
-            icon={<GoPerson />}
-            onClick={() => router.push("/people")}
-          />
-        </li>
+        {token && (
+          <li>
+            <SideBarIcon
+              text="People"
+              icon={<GoPerson />}
+              onClick={() => router.push("/people")}
+            />
+          </li>
+        )}
         {!token && (
           <li>
             <SideBarIcon
@@ -58,13 +66,15 @@ const Navbar = () => {
             />
           </li>
         )}
-        <li>
-          <SideBarIcon
-            text="Logout"
-            icon={<GiExitDoor />}
-            onClick={logoutHandler}
-          />
-        </li>
+        {token && (
+          <li>
+            <SideBarIcon
+              text="Logout"
+              icon={<GiExitDoor />}
+              onClick={logoutHandler}
+            />
+          </li>
+        )}
       </ul>
     </div>
   );
@@ -72,15 +82,16 @@ const Navbar = () => {
 
 const SideBarIcon = ({ icon, text = "tooltip💡", onClick }) => {
   return (
-    <motion.div
-      whileHover={{ scale: 1.1 }}
+    <motion.button
+      // whileHover={{ scale: 1.1 }}
       whileTap={{ scale: 0.8 }}
       className="sidebarIcon group"
       onClick={onClick}
+      name={text}
     >
       {icon}
       <span className="sidebarTooltip group-hover:scale-100">{text}</span>
-    </motion.div>
+    </motion.button>
   );
 };
 
