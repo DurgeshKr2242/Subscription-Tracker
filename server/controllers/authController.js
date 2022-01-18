@@ -64,7 +64,7 @@ exports.updateUser = async (req, res, next) => {
   }
 
   user.name = name;
-  user.picture = picture;
+  if (picture) user.picture = picture;
 
   try {
     console.log("SAVING!!!");

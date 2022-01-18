@@ -14,9 +14,9 @@ const SingleFriend = ({ pfp, name }) => {
       {/* </div> */}
       <div className="flex justify-between w-full">
         <p className="text-lg tablet-s:text-xl">{name}</p>
-        <button className="p-2 bg-yellow-600 rounded-full dark:bg-bgyellow">
+        {/* <button className="p-2 bg-yellow-600 rounded-full dark:bg-bgyellow">
           <HiUserRemove className="text-lg text-black rounded-full tablet-s:text-2xl" />
-        </button>
+        </button> */}
       </div>
     </div>
   );

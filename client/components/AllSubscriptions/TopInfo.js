@@ -9,7 +9,7 @@ const TopInfo = ({ sortHandler }) => {
         <div className="flex items-center justify-between w-full">
           <div className="flex flex-col items-start w-full">
             <p className="text-sm font-bold text-left text-gray-400 ">
-              Total Subsciptions
+              Total Subs
             </p>
             <p className="mt-4 text-4xl font-bold">06</p>
           </div>

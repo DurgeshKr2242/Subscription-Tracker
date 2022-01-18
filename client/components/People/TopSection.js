@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useRouter } from "next/router";
 import { toast } from "react-toastify";
 import {
   uploadBytesResumable,
@@ -16,9 +17,11 @@ import { useGlobalAuthContext } from "../../AuthContext";
 
 import { FaUserEdit } from "react-icons/fa";
 import { MdOutlineDownloadDone } from "react-icons/md";
+import Router from "next/router";
 
 const TopSection = () => {
   // const [durationActive, setDurationActive] = useState(true);
+  const router = useRouter();
   const [editMode, setEditMode] = useState(false);
   const [friendId, setFriendId] = useState("");
   const { token, user, userId } = useGlobalAuthContext();
@@ -31,31 +34,48 @@ const TopSection = () => {
     setEditedImgUrl(user?.picture);
   }, [user]);
 
+  const onImgInputClick = (e) => {
+    e.target.value = "";
+  };
+
   const handleImgInput = (e) => {
     let pickedFile;
     if (e.target.files && e.target.files.length === 1) {
       setEditedImgUrl(URL.createObjectURL(e.target.files[0]));
       console.log(editedImgUrl);
+      console.log(e.target);
       pickedFile = e.target.files[0];
       setSelectedImage(pickedFile);
+      console.log(selectedImage);
     }
-    console.log("Your selected cover img is: ", selectedImage);
   };
 
   const addFriendHandler = async (e) => {
-    try {
-      const res = await addFriend(token, friendId);
-      toast.success("Friend Added", {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
-    } catch (err) {
-      toast.error(err.response.data.message, {
+    if (friendId) {
+      try {
+        const res = await addFriend(token, friendId);
+        toast.success("Friend Added", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      } catch (err) {
+        toast.error(err.response.data.message, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      }
+    } else {
+      toast.error("Please enter a user id", {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
@@ -99,30 +119,94 @@ const TopSection = () => {
 
   const updateProfileHandler = async (e) => {
     e.preventDefault();
-    let storageURL;
-    try {
-      storageURL = await uploadTaskPromise(selectedImage);
 
+    if (!selectedImage) {
       try {
-        await updateProfile(auth.currentUser, {
-          displayName: editedName,
-          photoURL: storageURL,
+        try {
+          await updateProfile(auth.currentUser, {
+            displayName: editedName,
+          });
+        } catch (err) {
+          console.log(err);
+        }
+
+        const updatedUser = {
+          name: editedName,
+        };
+        const res = await axios.patch(
+          `${process.env.NEXT_PUBLIC_API_URL}/auth/${userId}`,
+          updatedUser
+        );
+        router.reload();
+
+        toast.success("PROFILE UPDATED!!", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
         });
+
+        setEditMode(false);
       } catch (err) {
         console.log(err);
+        toast.error(err.message, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
       }
+    } else {
+      let storageURL;
+      try {
+        storageURL = await uploadTaskPromise(selectedImage);
 
-      const updatedUser = {
-        name: editedName,
-        picture: storageURL,
-      };
-      const res = await axios.patch(
-        `${process.env.NEXT_PUBLIC_API_URL}/auth/${userId}`,
-        updatedUser
-      );
-    } catch (err) {
-      console.log(err);
-      console.log(err.code);
+        try {
+          await updateProfile(auth.currentUser, {
+            displayName: editedName,
+            photoURL: storageURL,
+          });
+        } catch (err) {
+          console.log(err);
+        }
+
+        const updatedUser = {
+          name: editedName,
+          picture: storageURL,
+        };
+        const res = await axios.patch(
+          `${process.env.NEXT_PUBLIC_API_URL}/auth/${userId}`,
+          updatedUser
+        );
+        router.reload();
+        toast.success("PROFILE UPDATED!!", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+        setEditMode(false);
+      } catch (err) {
+        console.log(err);
+        toast.error(err.message, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      }
     }
   };
 
@@ -140,12 +224,14 @@ const TopSection = () => {
             <img
               src={user?.picture}
               alt="profilePic"
-              className="absolute border-8 -top-14 border-bgblack inline object-cover w-[110px] h-[110px] rounded-full"
+              className="absolute border-8 -top-14 dark:bg-bgblack dark:border-bgblack bg-white border-white  inline object-cover w-[110px] h-[110px] rounded-full"
             />
             <p className="text-2xl font-bold tracking-wide text-center ">
               {user?.name}
             </p>
-            <p className="text-xs text-gray-500">User id : {user?._id}</p>
+            <p className="text-xs font-bold text-left text-gray-600 dark:text-gray-400">
+              User id : {user?._id}
+            </p>
           </div>
 
           <div className="flex justify-between w-full">
@@ -153,20 +239,24 @@ const TopSection = () => {
               <h1 className="mt-4 text-3xl font-bold">
                 {user?.friends?.length}
               </h1>
-              <p className="text-sm font-bold text-left text-gray-400 ">
+              <p className="text-sm font-bold text-left text-gray-600 dark:text-gray-400 ">
                 Friends
               </p>
             </div>
             <div className="flex flex-col items-center w-full">
               <h1 className="mt-4 text-3xl font-bold">{user?.posts?.length}</h1>
-              <p className="text-sm font-bold text-left text-gray-400 ">Subs</p>
+              <p className="text-sm font-bold text-left text-gray-600 dark:text-gray-400 ">
+                Subs
+              </p>
             </div>
           </div>
           <div className="flex flex-col items-center w-full">
             <h1 className="mt-2 text-3xl font-bold">
               ₹ {user?.spent?.toFixed(2)}
             </h1>
-            <p className="text-sm font-bold text-left text-gray-400 ">Spent</p>
+            <p className="text-sm font-bold text-left text-gray-600 dark:text-gray-400 ">
+              Spent
+            </p>
           </div>
 
           <div className="flex flex-wrap justify-center">
@@ -178,12 +268,14 @@ const TopSection = () => {
               value={friendId}
               onChange={(e) => setFriendId(e.target.value)}
             />
-            <button
+            <motion.button
               onClick={addFriendHandler}
-              className="px-4 py-1 mt-2 text-sm tracking-wide bg-gray-800 rounded-md text-bgWhiteSec"
+              whileTap={{ scale: 0.9 }}
+              className="px-6 py-2 mt-4 text-sm font-bold tracking-wide rounded-lg shadow-md shadow-yellow-800 bg-bgyellow text-bgblack"
+              // className="px-6 py-2 mt-4 text-sm font-extrabold tracking-wide rounded-md bg-bgyellow text-bgblack"
             >
               Add Friend
-            </button>
+            </motion.button>
           </div>
         </div>
       )}
@@ -206,6 +298,7 @@ const TopSection = () => {
               input
               type="file"
               accept="image/*"
+              onClick={onImgInputClick}
               onChange={handleImgInput}
               id="profilepicInput"
               className="hidden"
@@ -225,7 +318,9 @@ const TopSection = () => {
             {/* <p className="text-2xl font-bold tracking-wide text-center ">
                 {user?.name}
               </p> */}
-            <p className="text-xs text-gray-500">User id : {user?._id}</p>
+            <p className="text-xs font-bold text-left text-gray-600 dark:text-gray-400">
+              User id : {user?._id}
+            </p>
           </div>
 
           <div className="flex justify-between w-full">
@@ -233,20 +328,24 @@ const TopSection = () => {
               <h1 className="mt-4 text-3xl font-bold">
                 {user?.friends?.length}
               </h1>
-              <p className="text-sm font-bold text-left text-gray-400 ">
+              <p className="text-sm font-bold text-left text-gray-600 dark:text-gray-400 ">
                 Friends
               </p>
             </div>
             <div className="flex flex-col items-center w-full">
               <h1 className="mt-4 text-3xl font-bold">{user?.posts?.length}</h1>
-              <p className="text-sm font-bold text-left text-gray-400 ">Subs</p>
+              <p className="text-sm font-bold text-left text-gray-600 dark:text-gray-400 ">
+                Subs
+              </p>
             </div>
           </div>
           <div className="flex flex-col items-center w-full">
             <h1 className="mt-2 text-3xl font-bold">
               ₹ {user?.spent?.toFixed(2)}
             </h1>
-            <p className="text-sm font-bold text-left text-gray-400 ">Spent</p>
+            <p className="text-sm font-bold text-left text-gray-600 dark:text-gray-400 ">
+              Spent
+            </p>
           </div>
 
           <div className="flex flex-wrap justify-center">

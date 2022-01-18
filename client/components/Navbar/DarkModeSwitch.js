@@ -16,6 +16,8 @@ const DarkModeSwitch = () => {
       className={`absolute top-[-7px] right-5 px-3 py-3 mt-6 text-lg rounded-3xl hover:rounded-lg flex justify-center items-center text-yellow-600 bg-gray-100 overflow-hidden transition-all duration-300 ease-linear dark:bg-gray-900 ${
         darkTheme && "group"
       }`}
+      name="light/dark-mode-switch"
+      aria-label="light/dark-mode-switch"
     >
       <ImSun
         className={`transition-all duration-300 ease-linear ${
