@@ -1,7 +1,5 @@
 import React, { useEffect } from "react";
 import dynamic from "next/dynamic";
-import { useGlobalAuthContext } from "../../AuthContext";
-import { useRouter } from "next/router";
 
 import Head from "next/head";
 const FriendsSection = dynamic(() =>
@@ -10,14 +8,6 @@ const FriendsSection = dynamic(() =>
 const TopSection = dynamic(() => import("../../components/People/TopSection"));
 
 const index = () => {
-  const { token, isLoading } = useGlobalAuthContext();
-  const router = useRouter();
-
-  useEffect(() => {
-    console.log(token === null);
-    if (token === null && isLoading === false) router.push("/");
-  }, []);
-
   <Head>
     <meta
       name="description"
