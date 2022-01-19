@@ -1,5 +1,9 @@
+import dynamic from "next/dynamic";
+
 import Head from "next/head";
-import HeroSection from "../components/LandingPage/HeroSection";
+const HeroSection = dynamic(() =>
+  import("../components/LandingPage/HeroSection")
+);
 
 export default function Home() {
   return (

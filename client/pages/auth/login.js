@@ -1,9 +1,12 @@
 import React, { useState } from "react";
+import dynamic from "next/dynamic";
 import { motion, AnimatePresence } from "framer-motion";
 import { ImArrowRight2 } from "react-icons/im";
 
-import LoginForm from "../../components/Auth/LoginForm";
-import RegisterForm from "../../components/Auth/RegisterForm";
+const LoginForm = dynamic(() => import("../../components/Auth/LoginForm"));
+const RegisterForm = dynamic(() =>
+  import("../../components/Auth/RegisterForm")
+);
 const Login = () => {
   const [loginActive, setLoginActive] = useState(true);
 

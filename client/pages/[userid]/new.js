@@ -1,15 +1,18 @@
 import React, { useEffect } from "react";
 // import NewSubscriptionForm from "../../components/AllSubscriptions/NewSubscriptionForm";
-import NewSubscriptionForm from "../../components/AllSubscriptions/NewSubscriptionForm";
+import dynamic from "next/dynamic";
+const NewSubscriptionForm = dynamic(() =>
+  import("../../components/AllSubscriptions/NewSubscriptionForm")
+);
 import { useRouter } from "next/router";
 import { useGlobalAuthContext } from "../../AuthContext";
 const New = () => {
   const router = useRouter();
-  const { token } = useGlobalAuthContext();
+  const { token, isLoading } = useGlobalAuthContext();
 
   useEffect(() => {
     console.log(token === null);
-    if (token === null) router.push("/");
+    if (token === null && isLoading === false) router.push("/");
   }, []);
 
   return (

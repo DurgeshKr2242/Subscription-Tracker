@@ -29,6 +29,9 @@ const TopSection = () => {
   const [editedName, setEditedName] = useState("");
   const [editedImgUrl, setEditedImgUrl] = useState("");
   const [selectedImage, setSelectedImage] = useState(null);
+
+  const [progressRemaining, setProgressRemaining] = useState(0);
+
   useEffect(() => {
     setEditedName(user?.name);
     setEditedImgUrl(user?.picture);
@@ -100,6 +103,7 @@ const TopSection = () => {
           const prog = Math.round(
             (snapshot.bytesTransferred / snapshot.totalBytes) * 100
           );
+          setProgressRemaining(prog);
           console.log(prog);
         },
         (error) => {
@@ -263,7 +267,7 @@ const TopSection = () => {
             <input
               type="text"
               id="addPeople"
-              className="inputBox"
+              className="inputBox dark:bg-bgBlackSec bg-bgWhiteSec"
               placeholder="Ender your Friend's id"
               value={friendId}
               onChange={(e) => setFriendId(e.target.value)}
@@ -284,7 +288,7 @@ const TopSection = () => {
         <div className="relative flex flex-col items-center w-full gap-8 px-3 py-6 tracking-wider transition-all duration-200 border-2 hover:shadow-lg hover:dark:shadow-gray-800 hover:shadow-gray-300 tablet-s:p-8 rounded-xl border-bgyellow">
           <div className="flex flex-col items-center gap-2 pt-10 ">
             <label
-              className="absolute z-10 p-8 text-xl rounded-full bg-black/50 -top-12"
+              className="absolute z-10 text-xl rounded-full p-7 bg-black/50 -top-12"
               htmlFor="profilepicInput"
             >
               {/* <button
@@ -307,11 +311,12 @@ const TopSection = () => {
             <img
               src={editedImgUrl}
               alt="profilePic"
-              className="absolute  border-8  -top-14 border-bgblack inline object-cover w-[110px] h-[110px] rounded-full"
+              className="absolute border-8 -top-14 dark:bg-bgblack dark:border-bgblack bg-white border-white  inline object-cover w-[110px] h-[110px] rounded-full"
             />
             <input
+              autoFocus
               type="text"
-              className="text-2xl font-bold tracking-wide text-center inputBox"
+              className="text-2xl font-bold tracking-wide text-center inputBox dark:bg-bgBlackSec bg-bgWhiteSec"
               value={editedName}
               onChange={(e) => setEditedName(e.target.value)}
             />
@@ -323,40 +328,7 @@ const TopSection = () => {
             </p>
           </div>
 
-          <div className="flex justify-between w-full">
-            <div className="flex flex-col items-center w-full">
-              <h1 className="mt-4 text-3xl font-bold">
-                {user?.friends?.length}
-              </h1>
-              <p className="text-sm font-bold text-left text-gray-600 dark:text-gray-400 ">
-                Friends
-              </p>
-            </div>
-            <div className="flex flex-col items-center w-full">
-              <h1 className="mt-4 text-3xl font-bold">{user?.posts?.length}</h1>
-              <p className="text-sm font-bold text-left text-gray-600 dark:text-gray-400 ">
-                Subs
-              </p>
-            </div>
-          </div>
-          <div className="flex flex-col items-center w-full">
-            <h1 className="mt-2 text-3xl font-bold">
-              ₹ {user?.spent?.toFixed(2)}
-            </h1>
-            <p className="text-sm font-bold text-left text-gray-600 dark:text-gray-400 ">
-              Spent
-            </p>
-          </div>
-
           <div className="flex flex-wrap justify-center">
-            {/* <input
-              type="text"
-              id="addPeople"
-              className="inputBox"
-              placeholder="Ender your Friend's id"
-              value={friendId}
-              onChange={(e) => setFriendId(e.target.value)}
-            /> */}
             <button
               onClick={updateProfileHandler}
               className="px-4 py-1 mt-2 text-sm tracking-wide bg-gray-800 rounded-md text-bgWhiteSec"
@@ -364,6 +336,7 @@ const TopSection = () => {
               Update Profile
             </button>
           </div>
+          <div></div>
         </div>
       )}
     </div>

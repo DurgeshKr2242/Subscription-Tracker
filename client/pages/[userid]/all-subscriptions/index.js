@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from "react";
-import AddNewSubscription from "../../../components/AllSubscriptions/AddNewSubscription";
-import SingleSubscription from "../../../components/AllSubscriptions/SingleSubscription";
+import dynamic from "next/dynamic";
+const AddNewSubscription = dynamic(() =>
+  import("../../../components/AllSubscriptions/AddNewSubscription")
+);
+const SingleSubscription = dynamic(() =>
+  import("../../../components/AllSubscriptions/SingleSubscription")
+);
 import { useGlobalAuthContext } from "../../../AuthContext";
 import { useRouter } from "next/router";
 import { getPostByUserId } from "../../../functions/auth";
@@ -15,7 +20,7 @@ const AllSubscriptions = () => {
 
   useEffect(() => {
     console.log(token === null);
-    if (token === null) router.push("/");
+    if (token === null && isLoading === false) router.push("/");
   }, []);
 
   const getNoOfDays = (date1, date2) => {

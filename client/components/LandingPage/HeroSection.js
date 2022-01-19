@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/router";
 
@@ -8,9 +8,13 @@ import money from "./assets/money.png";
 import shareFriends from "./assets/shareFriends.png";
 
 import { useGlobalAuthContext } from "../../AuthContext";
+import axios from "axios";
 const HeroSection = () => {
   const { userId, token } = useGlobalAuthContext();
   const router = useRouter();
+
+  const [allUsers, setAllUsers] = useState(0);
+  const [allPosts, setAllPosts] = useState(0);
 
   const getStartedHandler = (e) => {
     e.preventDefault();
@@ -20,6 +24,25 @@ const HeroSection = () => {
       router.push("/auth/login");
     }
   };
+
+  useEffect(() => {
+    const getAllUsers = async () => {
+      const userRes = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/auth`
+      );
+      setAllUsers(userRes.data.users?.length);
+    };
+
+    const getAllPosts = async () => {
+      const postsRes = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/posts`
+      );
+      setAllPosts(postsRes.data.posts?.length);
+    };
+
+    getAllUsers();
+    getAllPosts();
+  }, []);
 
   return (
     <div className="flex flex-col items-center w-full">
@@ -49,12 +72,12 @@ const HeroSection = () => {
       {/* ~~~~~~~~~~~~~ACHIEVEMENTS~~~~~~~~~~~~~ */}
       <div className="flex flex-wrap items-center justify-center w-full gap-12 bg-bgblack dark:bg-white tablet-s:gap-36 py-14 text-bgblack">
         <div className="flex justify-center items-center py-6 px-20 rounded-2xl dark:bg-bgblack dark:text-white bg-bgWhiteSec text-bgblack max-w-[280px] gap-4 ">
-          <p className="text-5xl font-bold">59+</p>
+          <p className="text-5xl font-bold">{`${allPosts}+`}</p>
           <p>Subscriptions Tracked</p>
         </div>
 
         <div className="flex justify-center items-center py-6 px-20 rounded-2xl dark:bg-bgblack dark:text-white bg-bgWhiteSec text-bgblack max-w-[280px] gap-4">
-          <p className="text-5xl font-bold">10+</p>
+          <p className="text-5xl font-bold">{`${allUsers}+`}</p>
           <p>Active Users</p>
         </div>
       </div>

@@ -71,16 +71,6 @@ const NewSubscriptionForm = () => {
     }
   };
 
-  // const handleChange = (event) => {
-  //   const {
-  //     target: { value },
-  //   } = event;
-  //   setPersonName(
-  //     // On autofill we get a stringified value.
-  //     typeof value === "string" ? value.split(",") : value
-  //   );
-  // };
-
   useEffect(() => {
     let config = {
       headers: {
@@ -123,7 +113,7 @@ const NewSubscriptionForm = () => {
           <input
             list="services"
             placeholder="Select a service"
-            className="bg-white  inputBox peer dark:bg-bgblack"
+            className="bg-white inputBox peer dark:bg-bgblack"
             id="ServiceProvider"
             type="text"
             value={serviceInput}
@@ -173,7 +163,7 @@ const NewSubscriptionForm = () => {
               displayValue="key"
               showCheckbox
               placeholder="Select People"
-              className="bg-white  inputBox dark:bg-bgblack"
+              className="bg-white inputBox dark:bg-bgblack"
               id="css_custom"
               style={{
                 chips: { background: "#141921" },

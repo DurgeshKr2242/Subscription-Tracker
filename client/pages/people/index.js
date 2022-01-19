@@ -1,18 +1,21 @@
 import React, { useEffect } from "react";
+import dynamic from "next/dynamic";
 import { useGlobalAuthContext } from "../../AuthContext";
 import { useRouter } from "next/router";
 
 import Head from "next/head";
-import FriendsSection from "../../components/People/FriendsSection";
-import TopSection from "../../components/People/TopSection";
+const FriendsSection = dynamic(() =>
+  import("../../components/People/FriendsSection")
+);
+const TopSection = dynamic(() => import("../../components/People/TopSection"));
 
 const index = () => {
-  const { token } = useGlobalAuthContext();
+  const { token, isLoading } = useGlobalAuthContext();
   const router = useRouter();
 
   useEffect(() => {
     console.log(token === null);
-    if (token === null) router.push("/");
+    if (token === null && isLoading === false) router.push("/");
   }, []);
 
   <Head>
