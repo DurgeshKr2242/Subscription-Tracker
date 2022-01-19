@@ -1,10 +1,12 @@
 {
-  "name": "server",
+  "name": "subscription-tracker-backend",
   "version": "1.0.0",
-  "description": "",
+  "description": "Platform for tracking subscriptions and all of your friends with whom you often share your subscriptions. You may also add people with whom you share your subscriptions and never forget who all the individuals with whom you shared your subscriptions are again. So get rid of all your stress related to your subscriptions because we are going to take care of your subcriptions and trck them.",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon server.js"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js",
+    "dev": "nodemon -r dotenv/config app.js"
   },
   "keywords": [],
   "author": "",
@@ -21,5 +23,8 @@
     "mongoose": "^6.1.4",
     "morgan": "^1.10.0",
     "nodemon": "^2.0.15"
+  },
+  "engines": {
+    "node": "v14.17.4"
   }
 }

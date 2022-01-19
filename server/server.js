@@ -1,10 +1,10 @@
 const express = require("express");
+require("dotenv").config();
 const mongoose = require("mongoose");
 const morgan = require("morgan");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const { readdirSync } = require("fs");
-require("dotenv").config();
 const HttpError = require("./models/httpError");
 
 const app = express();
@@ -22,7 +22,8 @@ app.use(cors());
 
 mongoose
   .connect(
-    "mongodb+srv://durgesh:s1RjSN227f6PAzI3@cluster0.svm0r.mongodb.net/subTrackerDev?retryWrites=true&w=majority"
+    // "mongodb+srv://durgesh:s1RjSN227f6PAzI3@cluster0.svm0r.mongodb.net/subTrackerDev?retryWrites=true&w=majority"
+    process.env.DATABASE_URI
   )
   .then(() => {
     console.log("DB CONNECTED!");
