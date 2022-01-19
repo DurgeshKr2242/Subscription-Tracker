@@ -1,10 +1,26 @@
 import React from "react";
 import { motion } from "framer-motion";
+import { useRouter } from "next/router";
+
 import Image from "next/image";
 import track from "./assets/track.png";
 import money from "./assets/money.png";
 import shareFriends from "./assets/shareFriends.png";
+
+import { useGlobalAuthContext } from "../../AuthContext";
 const HeroSection = () => {
+  const { userId, token } = useGlobalAuthContext();
+  const router = useRouter();
+
+  const getStartedHandler = (e) => {
+    e.preventDefault();
+    if (token) {
+      router.push(`/${userId}/all-subscriptions`);
+    } else {
+      router.push("/auth/login");
+    }
+  };
+
   return (
     <div className="flex flex-col items-center w-full">
       {/* ~~~~~~~~~~~~~HERO SECTION~~~~~~~~~~~~~ */}
@@ -22,6 +38,7 @@ const HeroSection = () => {
           remove whatever weight we can off your shoulders.
         </p>
         <motion.button
+          onClick={getStartedHandler}
           whileTap={{ scale: 0.9 }}
           className="px-6 py-2 text-lg font-bold tracking-wide rounded-lg shadow-md shadow-yellow-800 bg-bgyellow text-bgblack"
         >

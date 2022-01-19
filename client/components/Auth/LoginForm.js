@@ -11,8 +11,8 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { createOrUpdateUser } from "../../functions/auth";
 
 const LoginForm = () => {
-  const [loginEmail, setLoginEmail] = useState("youngporkey2242@gmail.com");
-  const [password, setPassword] = useState("qwertyuiop");
+  const [loginEmail, setLoginEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const {

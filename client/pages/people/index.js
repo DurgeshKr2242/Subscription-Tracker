@@ -1,9 +1,20 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useGlobalAuthContext } from "../../AuthContext";
+import { useRouter } from "next/router";
+
 import Head from "next/head";
 import FriendsSection from "../../components/People/FriendsSection";
 import TopSection from "../../components/People/TopSection";
 
 const index = () => {
+  const { token } = useGlobalAuthContext();
+  const router = useRouter();
+
+  useEffect(() => {
+    console.log(token === null);
+    if (token === null) router.push("/");
+  }, []);
+
   <Head>
     <meta
       name="description"
@@ -16,6 +27,7 @@ const index = () => {
     />
     <title>Your Subs</title>
   </Head>;
+
   return (
     <div className="w-screen tablet-s:pb-6 pb-14 min-h-screen h-100% dark:bg-bgblack dark:text-white flex flex-col items-center gap-14">
       <TopSection />
