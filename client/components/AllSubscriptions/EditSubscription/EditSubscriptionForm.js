@@ -89,6 +89,7 @@ const EditSubscriptionForm = () => {
       //   },
       // }
     );
+    router.reload();
     router.push(`/${userId}/all-subscriptions`);
   };
 
@@ -146,7 +147,7 @@ const EditSubscriptionForm = () => {
           <input
             list="services"
             placeholder="Select a service"
-            className=" inputBox peer bg-bgblack"
+            className="bg-white inputBox peer"
             id="ServiceProvider"
             type="text"
             value={serviceInput}
@@ -163,7 +164,7 @@ const EditSubscriptionForm = () => {
           <div className="relative mt-8">
             <input
               placeholder="Cost"
-              className="inputBox peer bg-bgblack"
+              className="bg-white inputBox peer "
               id="Cost"
               type="number"
               value={costInput}
@@ -184,7 +185,7 @@ const EditSubscriptionForm = () => {
               }}
               withPortal
               placeholderText="Select Date"
-              className="inputBox bg-bgblack"
+              className="bg-white inputBox"
             />
           </div>
           <div className="w-full mt-6 mb-2">
@@ -196,7 +197,7 @@ const EditSubscriptionForm = () => {
               displayValue="key"
               showCheckbox
               placeholder="Select People"
-              className=" inputBox bg-bgblack"
+              className="bg-white inputBox "
               id="css_custom"
               style={{
                 chips: { background: "#141921" },

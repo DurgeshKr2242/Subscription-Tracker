@@ -65,6 +65,7 @@ const NewSubscriptionForm = () => {
         //   },
         // }
       );
+      router.reload();
       router.push(`/${userId}/all-subscriptions`);
     } catch (err) {
       console.log(err);

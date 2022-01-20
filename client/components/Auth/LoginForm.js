@@ -61,6 +61,7 @@ const LoginForm = () => {
             progress: undefined,
           });
           router.push(`/${res.data._id}/all-subscriptions`);
+          router.reload();
         }
       } catch (err) {
         console.log(err);
@@ -80,42 +81,42 @@ const LoginForm = () => {
     }
   };
 
-  const googleLoginHandler = async (e) => {
-    e.preventDefault();
-    try {
-      const googleResult = await signInWithPopup(auth, googleAuthProvider);
-      const { user } = googleResult;
-      const idTokenResult = await user.getIdTokenResult();
+  // const googleLoginHandler = async (e) => {
+  //   e.preventDefault();
+  //   try {
+  //     const googleResult = await signInWithPopup(auth, googleAuthProvider);
+  //     const { user } = googleResult;
+  //     const idTokenResult = await user.getIdTokenResult();
 
-      try {
-        const res = await createOrUpdateUser(idTokenResult.token);
-        if (res?.data) {
-          setToken(idTokenResult.token);
-          setUser(user);
-          setProfilePic(res.data.picture);
-          setUsername(res.data.name);
-          setEmail(res.data.email);
-          setUserId(res.data._id);
-        }
-
-        router.push(`/${res.data._id}/all-subscriptions`);
-      } catch (err) {
-        console.log(err);
-      }
-    } catch (error) {
-      setLoading(false);
-      console.log(error);
-      toast.error(error.message, {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
-    }
-  };
+  //     try {
+  //       const res = await createOrUpdateUser(idTokenResult.token);
+  //       if (res?.data) {
+  //         setToken(idTokenResult.token);
+  //         setUser(user);
+  //         setProfilePic(res.data.picture);
+  //         setUsername(res.data.name);
+  //         setEmail(res.data.email);
+  //         setUserId(res.data._id);
+  //       }
+  //       router.reload();
+  //       router.push(`/${res.data._id}/all-subscriptions`);
+  //     } catch (err) {
+  //       console.log(err);
+  //     }
+  //   } catch (error) {
+  //     setLoading(false);
+  //     console.log(error);
+  //     toast.error(error.message, {
+  //       position: "top-right",
+  //       autoClose: 5000,
+  //       hideProgressBar: false,
+  //       closeOnClick: true,
+  //       pauseOnHover: true,
+  //       draggable: true,
+  //       progress: undefined,
+  //     });
+  //   }
+  // };
 
   return (
     <motion.div

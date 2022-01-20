@@ -61,8 +61,8 @@ const RegisterForm = () => {
           draggable: true,
           progress: undefined,
         });
-        router.reload();
         router.push(`/${res.data._id}/all-subscriptions`);
+        router.reload();
       } catch (err) {
         console.log(err);
         toast.error(err.message, {

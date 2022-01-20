@@ -30,7 +30,7 @@ const TopSection = () => {
   const [editedImgUrl, setEditedImgUrl] = useState("");
   const [selectedImage, setSelectedImage] = useState(null);
 
-  const [progressRemaining, setProgressRemaining] = useState(0);
+  const [progressRemaining, setProgressRemaining] = useState(null);
 
   useEffect(() => {
     setEditedName(user?.name);
@@ -66,6 +66,7 @@ const TopSection = () => {
           draggable: true,
           progress: undefined,
         });
+        router.reload();
       } catch (err) {
         toast.error(err.response.data.message, {
           position: "top-right",
@@ -141,7 +142,6 @@ const TopSection = () => {
           `${process.env.NEXT_PUBLIC_API_URL}/auth/${userId}`,
           updatedUser
         );
-        router.reload();
 
         toast.success("PROFILE UPDATED!!", {
           position: "top-right",
@@ -154,6 +154,7 @@ const TopSection = () => {
         });
 
         setEditMode(false);
+        router.reload();
       } catch (err) {
         console.log(err);
         toast.error(err.message, {
@@ -188,7 +189,6 @@ const TopSection = () => {
           `${process.env.NEXT_PUBLIC_API_URL}/auth/${userId}`,
           updatedUser
         );
-        router.reload();
         toast.success("PROFILE UPDATED!!", {
           position: "top-right",
           autoClose: 5000,
@@ -199,6 +199,7 @@ const TopSection = () => {
           progress: undefined,
         });
         setEditMode(false);
+        router.reload();
       } catch (err) {
         console.log(err);
         toast.error(err.message, {
@@ -313,6 +314,17 @@ const TopSection = () => {
               alt="profilePic"
               className="absolute border-8 -top-14 dark:bg-bgblack dark:border-bgblack bg-white border-white  inline object-cover w-[110px] h-[110px] rounded-full"
             />
+            {progressRemaining != null && (
+              <div className="relative w-full">
+                <div
+                  className="h-2 bg-blue-600 rounded-full"
+                  style={{
+                    width: `${progressRemaining}%`,
+                  }}
+                ></div>
+              </div>
+            )}
+
             <input
               autoFocus
               type="text"
@@ -329,14 +341,14 @@ const TopSection = () => {
           </div>
 
           <div className="flex flex-wrap justify-center">
-            <button
+            <motion.button
               onClick={updateProfileHandler}
-              className="px-4 py-1 mt-2 text-sm tracking-wide bg-gray-800 rounded-md text-bgWhiteSec"
+              whileTap={{ scale: 0.9 }}
+              className="px-6 py-2 mt-4 text-sm font-bold tracking-wide rounded-lg shadow-md shadow-yellow-800 bg-bgyellow text-bgblack"
             >
               Update Profile
-            </button>
+            </motion.button>
           </div>
-          <div></div>
         </div>
       )}
     </div>
